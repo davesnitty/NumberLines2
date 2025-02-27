@@ -1,61 +1,76 @@
 <html>
+
 <head>
     <title>Number Line</title>
     <style>
         .number-line-container {
             margin: 50px 20px;
         }
+
         .tick-label {
             font-family: Arial, sans-serif;
             font-size: 16px;
             text-anchor: middle;
         }
+
         #storyContainer {
             margin: 20px;
-            min-height: 100px; /* Ensure consistent space for story text */
+            min-height: 100px;
+            /* Ensure consistent space for story text */
         }
+
         #buttonContainer {
             margin: 20px;
         }
+
         .story-text {
             margin: 10px 0;
             font-family: Arial, sans-serif;
             font-size: 16px;
         }
+
         #equationDisplay {
             margin-top: 20px;
             font-size: 24px;
             font-family: Arial, sans-serif;
             text-align: center;
         }
+
         #reverseStoryContainer {
             margin: 20px;
             border-top: 1px solid #ccc;
             padding-top: 20px;
         }
+
         #reverseEquationDisplay {
             margin-top: 20px;
             font-size: 24px;
             font-family: Arial, sans-serif;
             text-align: center;
         }
+
         @keyframes celebrate {
             0% {
                 transform: scale(1);
             }
+
             25% {
                 transform: scale(3) rotate(20deg);
             }
+
             50% {
                 transform: scale(3) rotate(-20deg);
             }
+
             75% {
                 transform: scale(3) rotate(20deg);
             }
+
             100% {
                 transform: scale(1) rotate(0);
             }
-        } 
+        }
+
         .equation-table {
             border-collapse: collapse;
             width: 40%;
@@ -66,6 +81,7 @@
             margin: 0 auto;
             display: block;
         }
+
         .equation-table td {
             border: 0px solid #000;
             padding: 5px;
@@ -74,6 +90,7 @@
         }
     </style>
 </head>
+
 <body>
     <h1>Number Line Story</h1>
     <div id="storySelector" style="margin: 20px;">
@@ -136,29 +153,29 @@
             {
                 name: "Cheese Puff Story",
                 story: [
-                    {txt: 'Isaac has X cheese puffs', 'pos': 8, label: 'x'},
-                    {txt: 'Suddenly, each cheese puff doubled!', 'pos': 16, label: '2x'},
-                    {txt: 'Then, he ate 5 of them', 'pos': 11, label: '2x - 5'},
-                    {txt: 'Then, Mommy dropped 4 more cheese puffs on his plate', 'pos': 15, label: '2x - 5 + 4'},
-                    {txt: 'Now he has 15 cheese puffs', 'pos': 15, label: '15'},
-                    {txt: 'What is the value of X?', 'pos': 15, label: '15'}
+                    { txt: 'Isaac has X cheese puffs', 'pos': 8, label: 'x' },
+                    { txt: 'Suddenly, each cheese puff doubled!', 'pos': 16, label: '2x' },
+                    { txt: 'Then, he ate 5 of them', 'pos': 11, label: '2x - 5' },
+                    { txt: 'Then, Mommy dropped 4 more cheese puffs on his plate', 'pos': 15, label: '2x - 5 + 4' },
+                    { txt: 'Now he has 15 cheese puffs', 'pos': 15, label: '15' },
+                    { txt: 'What is the value of X?', 'pos': 15, label: '15' }
                 ],
                 equation: ["2x -5 + 4", "=", "15"],
                 revstory: [
-                    {txt: 'Adding 4 cheese puffs is symbolized by "+4". To reverse our steps, we subtract 4 from both sides. Now we have 11 cheese puffs.', 'pos': 11, label: '11', equ: ["2x - 5", "=", "11"], pre_equ: ["-4", "", "-4"]},
-                    {txt: 'Eating 5 cheese puffs is symbolized by "-5". To reverse our steps, we add 5 to both sides. Now we have 16 cheese puffs.', 'pos': 16, label: '16', equ: ["2x", "=", "16"], pre_equ: ["+5", "", "+5"]},
-                    {txt: 'Each cheese puff doubling is symbolized by "2x". To reverse this step, we divide both sides by 2. Now we have 8 cheese puffs. So x = 8!', 'pos': 8, label: 'x = 8', equ: ["x", "=", "8"], pre_equ: ["/2", "", "/2"]}
+                    { txt: 'Adding 4 cheese puffs is symbolized by "+4". To reverse our steps, we subtract 4 from both sides. Now we have 11 cheese puffs.', 'pos': 11, label: '11', equ: ["2x - 5", "=", "11"], pre_equ: ["-4", "", "-4"] },
+                    { txt: 'Eating 5 cheese puffs is symbolized by "-5". To reverse our steps, we add 5 to both sides. Now we have 16 cheese puffs.', 'pos': 16, label: '16', equ: ["2x", "=", "16"], pre_equ: ["+5", "", "+5"] },
+                    { txt: 'Each cheese puff doubling is symbolized by "2x". To reverse this step, we divide both sides by 2. Now we have 8 cheese puffs. So x = 8!', 'pos': 8, label: 'x = 8', equ: ["x", "=", "8"], pre_equ: ["/2", "", "/2"] }
                 ],
                 numberLine: { start: -2, end: 20, interval: 1, show: [0, 20] }
             },
             {
                 name: "Superhero Story",
                 story: [
-                    {txt: "The superhero's power level is X",         pos: 16, label: "x"},
-                    {txt: "Then, the superhero doubles their power!", pos: 32, label: "2x"},
-                    {txt: "Then, they gain 10 more points of power",  pos: 42, label: "2x + 10"},
-                    {txt: "Now the power level is 42",                pos: 42, label: "42"},
-                    {txt: "What is the value of X?",                  pos: 42, label: "42"}
+                    { txt: "The superhero's power level is X", pos: 16, label: "x" },
+                    { txt: "Then, the superhero doubles their power!", pos: 32, label: "2x" },
+                    { txt: "Then, they gain 10 more points of power", pos: 42, label: "2x + 10" },
+                    { txt: "Now the power level is 42", pos: 42, label: "42" },
+                    { txt: "What is the value of X?", pos: 42, label: "42" }
                 ],
                 equation: ["2x + 10", "=", "42"],
                 revstory: [
@@ -182,11 +199,11 @@
             {
                 name: "Shark Story",
                 story: [
-                    {txt: "The shark is X feet long",                    pos: 12, label: "x"},
-                    {txt: "Suddenly, the shark grew to 3 times its size!", pos: 36, label: "3x"},
-                    {txt: "Then, it grew 9 more feet",                  pos: 45, label: "3x + 9"},
-                    {txt: "Now it is 45 feet long",                     pos: 45, label: "45"},
-                    {txt: "What is the value of X?",                    pos: 45, label: "45"}
+                    { txt: "The shark is X feet long", pos: 12, label: "x" },
+                    { txt: "Suddenly, the shark grew to 3 times its size!", pos: 36, label: "3x" },
+                    { txt: "Then, it grew 9 more feet", pos: 45, label: "3x + 9" },
+                    { txt: "Now it is 45 feet long", pos: 45, label: "45" },
+                    { txt: "What is the value of X?", pos: 45, label: "45" }
                 ],
                 equation: ["3x + 9", "=", "45"],
                 revstory: [
@@ -210,11 +227,11 @@
             {
                 name: "Longhorn Story",
                 story: [
-                    {txt: "The Longhorn's horns measure X inches",    pos: 6,  label: "x"},
-                    {txt: "Suddenly, they grew to 5 times their size!", pos: 30, label: "5x"},
-                    {txt: "Then, they grew 8 more inches",            pos: 38, label: "5x + 8"},
-                    {txt: "Now they measure 38 inches",               pos: 38, label: "38"},
-                    {txt: "What is the value of X?",                  pos: 38, label: "38"}
+                    { txt: "The Longhorn's horns measure X inches", pos: 6, label: "x" },
+                    { txt: "Suddenly, they grew to 5 times their size!", pos: 30, label: "5x" },
+                    { txt: "Then, they grew 8 more inches", pos: 38, label: "5x + 8" },
+                    { txt: "Now they measure 38 inches", pos: 38, label: "38" },
+                    { txt: "What is the value of X?", pos: 38, label: "38" }
                 ],
                 equation: ["5x + 8", "=", "38"],
                 revstory: [
@@ -238,13 +255,13 @@
             {
                 name: "Giraffe Story",
                 story: [
-                    {txt: "The giraffe is X feet tall",                pos: 2,  label: "x"},
-                    {txt: "It doubles in height!",                      pos: 4,  label: "2x"},
-                    {txt: "Then it grows 5 more feet",                  pos: 9,  label: "2x + 5"},
-                    {txt: "Suddenly, it triples its new size!",         pos: 27, label: "3(2x + 5)"},
-                    {txt: "Then, it grows 4 more feet",                 pos: 31, label: "3(2x + 5) + 4"},
-                    {txt: "Now it is 31 feet tall",                     pos: 31, label: "31"},
-                    {txt: "What is the value of X?",                    pos: 31, label: "31"}
+                    { txt: "The giraffe is X feet tall", pos: 2, label: "x" },
+                    { txt: "It doubles in height!", pos: 4, label: "2x" },
+                    { txt: "Then it grows 5 more feet", pos: 9, label: "2x + 5" },
+                    { txt: "Suddenly, it triples its new size!", pos: 27, label: "3(2x + 5)" },
+                    { txt: "Then, it grows 4 more feet", pos: 31, label: "3(2x + 5) + 4" },
+                    { txt: "Now it is 31 feet tall", pos: 31, label: "31" },
+                    { txt: "What is the value of X?", pos: 31, label: "31" }
                 ],
                 equation: ["3(2x + 5) + 4", "=", "31"],
                 revstory: [
@@ -279,6 +296,62 @@
                 ],
                 numberLine: { start: 0, end: 35, interval: 5, show: [0, 31] }
             },
+            {
+                name: "Spaceship Story",
+                story: [
+                    { txt: 'The spaceship starts with X gallons of fuel', pos: 6, label: 'x' },
+                    { txt: 'Then the fuel doubles in volume!', pos: 12, label: '2x' },
+                    { txt: 'Next, it gains 3 more gallons', pos: 15, label: '2x + 3' },
+                    { txt: 'Now it has 15 gallons of fuel', pos: 15, label: '15' },
+                    { txt: 'What is the value of X?', pos: 15, label: '15' }
+                ],
+                equation: ["2x + 3", "=", "15"],
+                revstory: [
+                    {
+                        txt: 'The spaceship gained 3 gallons, symbolized by "+3". To reverse, subtract 3 from both sides. Now we have 12 gallons.',
+                        pos: 12,
+                        label: '12',
+                        equ: ["2x", "=", "12"],
+                        pre_equ: ["-3", "", "-3"]
+                    },
+                    {
+                        txt: 'Doubling the fuel is symbolized by "2x". To reverse this, divide by 2. Now we have 6 gallons. So x = 6!',
+                        pos: 6,
+                        label: 'x = 6',
+                        equ: ["x", "=", "6"],
+                        pre_equ: ["/2", "", "/2"]
+                    }
+                ],
+                numberLine: { start: -2, end: 20, interval: 2, show: [0, 10] }
+            },
+            {
+                name: "Basketball Story",
+                story: [
+                    { txt: 'Jake starts the basketball game with X points', pos: 4, label: 'x' },
+                    { txt: 'He doubles his points!', pos: 8, label: '2x' },
+                    { txt: 'Then he scores 9 more points', pos: 17, label: '2x + 9' },
+                    { txt: 'Now he has 17 points', pos: 17, label: '17' },
+                    { txt: 'What is the value of X?', pos: 17, label: '17' }
+                ],
+                equation: ["2x + 9", "=", "17"],
+                revstory: [
+                    {
+                        txt: 'He scored 9 extra points, symbolized by "+9". To reverse, subtract 9 from both sides. Now we have 8 points.',
+                        pos: 8,
+                        label: '8',
+                        equ: ["2x", "=", "8"],
+                        pre_equ: ["-9", "", "-9"]
+                    },
+                    {
+                        txt: 'Doubling his points is symbolized by "2x". To reverse that, divide by 2. Now we have 4 points. So x = 4!',
+                        pos: 4,
+                        label: 'x = 4',
+                        equ: ["x", "=", "4"],
+                        pre_equ: ["/2", "", "/2"]
+                    }
+                ],
+                numberLine: { start: 0, end: 20, interval: 1, show: [0] }
+            }
             // Add other stories in the same format...
         ];
 
@@ -287,10 +360,10 @@
             const padding = 40;
             const width = svg.clientWidth;
             const lineY = 50;
-            
+
             // Clear any existing content
             svg.innerHTML = '';
-            
+
             // Draw main line
             const line = document.createElementNS("http://www.w3.org/2000/svg", "line");
             line.setAttribute("x1", padding);
@@ -300,28 +373,28 @@
             line.setAttribute("stroke", "black");
             line.setAttribute("stroke-width", "2");
             svg.appendChild(line);
-            
+
             // Draw arrows
             const arrowSize = 10;
             // Left arrow
             const leftArrow = document.createElementNS("http://www.w3.org/2000/svg", "path");
-            leftArrow.setAttribute("d", `M ${padding + arrowSize} ${lineY - arrowSize/2} L ${padding} ${lineY} L ${padding + arrowSize} ${lineY + arrowSize/2}`);
+            leftArrow.setAttribute("d", `M ${padding + arrowSize} ${lineY - arrowSize / 2} L ${padding} ${lineY} L ${padding + arrowSize} ${lineY + arrowSize / 2}`);
             leftArrow.setAttribute("stroke", "black");
             leftArrow.setAttribute("fill", "none");
             svg.appendChild(leftArrow);
-            
+
             // Right arrow
             const rightArrow = document.createElementNS("http://www.w3.org/2000/svg", "path");
-            rightArrow.setAttribute("d", `M ${width - padding - arrowSize} ${lineY - arrowSize/2} L ${width - padding} ${lineY} L ${width - padding - arrowSize} ${lineY + arrowSize/2}`);
+            rightArrow.setAttribute("d", `M ${width - padding - arrowSize} ${lineY - arrowSize / 2} L ${width - padding} ${lineY} L ${width - padding - arrowSize} ${lineY + arrowSize / 2}`);
             rightArrow.setAttribute("stroke", "black");
             rightArrow.setAttribute("fill", "none");
             svg.appendChild(rightArrow);
-            
+
             // Draw ticks and labels
             const usableWidth = width - 2 * padding;
             const valueRange = endValue - startValue;
             const numTicks = Math.floor(valueRange / tickInterval) + 1;
-            
+
             svg.setAttribute('data-start-value', startValue);
             svg.setAttribute('data-end-value', endValue);
             svg.setAttribute('data-tick-interval', tickInterval);
@@ -330,7 +403,7 @@
             for (let i = 0; i < numTicks; i++) {
                 const value = startValue + (i * tickInterval);
                 const x = padding + (i * tickInterval * usableWidth / valueRange);
-                
+
                 // Draw tick
                 const tick = document.createElementNS("http://www.w3.org/2000/svg", "line");
                 tick.setAttribute("x1", x);
@@ -339,7 +412,7 @@
                 tick.setAttribute("y2", lineY + 5);
                 tick.setAttribute("stroke", "black");
                 svg.appendChild(tick);
-                
+
                 // Add label only if the value is in toShow array
                 if (toShow.includes(value)) {
                     console.log(value);
@@ -362,15 +435,15 @@
             const width = svg.clientWidth;
             const lineY = 50;
             const usableWidth = width - 2 * padding;
-            
+
             // Show current step
             const step = story[currentStepIndex];
-            
+
             // Display the text from the step
             const text = document.createElement('div');
             text.textContent = step.txt;
             text.className = 'story-text';
-            
+
             // Add text to appropriate container
             if (isReversing) {
                 document.getElementById('reverseStoryContainer').appendChild(text);
@@ -395,29 +468,29 @@
                     row.appendChild(cell3);
                     //pause for 1 second here
                     setTimeout(() => {
-                    //append a new row for the equation
-                    const row2 = document.createElement('tr');
-                    equationDisplay.appendChild(row2);
-                    //append a new cell to the row
-                    const cell4 = document.createElement('td');
-                    cell4.textContent = step.equ[0];
-                    row2.appendChild(cell4);    
-                    //append a new cell to the row
-                    const cell5 = document.createElement('td');
-                    cell5.textContent = step.equ[1];
-                    row2.appendChild(cell5);
-                    //append a new cell to the row
-                    const cell6 = document.createElement('td');
-                    cell6.textContent = step.equ[2];
-                    row2.appendChild(cell6);
-                    // Add celebration animation for the final equation
-                    if (isReversing && currentStepIndex === revstory.length ) {
-                        row2.style.position = 'relative';
-                        row2.style.color = 'red';
-                        row2.style.animation = 'celebrate 3s ease-in-out';
-                    }
+                        //append a new row for the equation
+                        const row2 = document.createElement('tr');
+                        equationDisplay.appendChild(row2);
+                        //append a new cell to the row
+                        const cell4 = document.createElement('td');
+                        cell4.textContent = step.equ[0];
+                        row2.appendChild(cell4);
+                        //append a new cell to the row
+                        const cell5 = document.createElement('td');
+                        cell5.textContent = step.equ[1];
+                        row2.appendChild(cell5);
+                        //append a new cell to the row
+                        const cell6 = document.createElement('td');
+                        cell6.textContent = step.equ[2];
+                        row2.appendChild(cell6);
+                        // Add celebration animation for the final equation
+                        if (isReversing && currentStepIndex === revstory.length) {
+                            row2.style.position = 'relative';
+                            row2.style.color = 'red';
+                            row2.style.animation = 'celebrate 3s ease-in-out';
+                        }
                     }, 1000);
-                    
+
                 }
             } else {
                 document.getElementById('storyContainer').appendChild(text);
@@ -428,7 +501,7 @@
             const endValue = parseFloat(svg.getAttribute('data-end-value'));
             const range = endValue - startValue;
             const x = padding + ((step.pos - startValue) * usableWidth / range);
-            
+
             // Create or update ball
             let ball = svg.querySelector('circle');
             if (!ball) {
@@ -448,7 +521,7 @@
                 animate.setAttribute("dur", "1s");
                 animate.setAttribute("fill", "freeze");
                 animate.setAttribute("begin", "indefinite");
-                
+
                 const animateY = document.createElementNS("http://www.w3.org/2000/svg", "animate");
                 animateY.setAttribute("attributeName", "cy");
                 animateY.setAttribute("values", `${lineY};${lineY - 30};${lineY}`);
@@ -458,27 +531,27 @@
                 animateY.setAttribute("keyTimes", "0;0.5;1");
                 animateY.setAttribute("calcMode", "spline");
                 animateY.setAttribute("keySplines", "0.42 0 0.58 1; 0.42 0 0.58 1");
-                
+
                 // Remove any existing animations
                 while (ball.firstChild) {
                     ball.removeChild(ball.firstChild);
                 }
-                
+
                 // Add new animations
                 ball.appendChild(animate);
                 ball.appendChild(animateY);
-                
+
                 // Begin animations
                 animate.beginElement();
                 animateY.beginElement();
-                
+
                 // Update ball position after animation
                 setTimeout(() => {
                     ball.setAttribute("cx", x);
                     ball.setAttribute("cy", lineY);
                 }, 1000);
             }
-            
+
             // Update or create label
             let label = svg.querySelector('text.current-label');
             if (step.label) {
@@ -504,7 +577,7 @@
         }
 
         // Add button event listeners
-        document.getElementById('startButton').addEventListener('click', function() {
+        document.getElementById('startButton').addEventListener('click', function () {
             // Reset everything
             currentStepIndex = 0;
             isReversing = false;
@@ -530,7 +603,7 @@
             document.getElementById('nextButton').style.display = 'inline';
         });
 
-        document.getElementById('showEquationButton').addEventListener('click', function() {
+        document.getElementById('showEquationButton').addEventListener('click', function () {
             const equationDisplay = document.getElementById('equationTable');
             document.getElementById('equationDisplay').style.display = 'block';
             //append a new row to the table
@@ -553,7 +626,7 @@
             document.getElementById('reverseButton').style.display = 'inline';
         });
 
-        document.getElementById('reverseButton').addEventListener('click', function() {
+        document.getElementById('reverseButton').addEventListener('click', function () {
             // Reset only for reverse story
             currentStepIndex = 0;
             isReversing = true;
@@ -567,7 +640,7 @@
             tellStory(revstory, equation);
         });
 
-        document.getElementById('nextButton').addEventListener('click', function() {
+        document.getElementById('nextButton').addEventListener('click', function () {
             const currentStory = isReversing ? revstory : story;
             if (currentStepIndex < currentStory.length) {
                 tellStory(currentStory, equation);
@@ -577,7 +650,7 @@
         // Add this function to populate and handle the story selector
         function initializeStorySelector() {
             const selector = document.getElementById('storySelect');
-            
+
             // Populate the selector with stories
             allStories.forEach((storyData, index) => {
                 const option = document.createElement('option');
@@ -587,14 +660,14 @@
             });
 
             // Handle story selection
-            selector.addEventListener('change', function() {
+            selector.addEventListener('change', function () {
                 const selectedStory = allStories[this.value];
-                
+
                 // Update global variables
                 story = selectedStory.story;
                 equation = selectedStory.equation;
                 revstory = selectedStory.revstory;
-                
+
                 // Reset the UI
                 currentStepIndex = 0;
                 isReversing = false;
@@ -603,13 +676,13 @@
                 document.getElementById('equationDisplay').style.display = 'none';
                 document.getElementById('reverseEquationDisplay').style.display = 'none';
                 document.getElementById('equationTable').innerHTML = '';
-                
+
                 // Show start button, hide others
                 document.getElementById('startButton').style.display = 'inline';
                 document.getElementById('nextButton').style.display = 'none';
                 document.getElementById('showEquationButton').style.display = 'none';
                 document.getElementById('reverseButton').style.display = 'none';
-                
+
                 // Draw the number line for this story
                 const nl = selectedStory.numberLine;
                 drawNumberLine(nl.start, nl.end, nl.interval, nl.show);
@@ -617,7 +690,7 @@
         }
 
         // Call this after the page loads
-        document.addEventListener('DOMContentLoaded', function() {
+        document.addEventListener('DOMContentLoaded', function () {
             // Initialize with the first story
             const firstStory = allStories[0];
             story = firstStory.story;
@@ -625,10 +698,11 @@
             revstory = firstStory.revstory;
             const nl = firstStory.numberLine;
             drawNumberLine(nl.start, nl.end, nl.interval, nl.show);
-            
+
             // Initialize the story selector
             initializeStorySelector();
         });
     </script>
 </body>
+
 </html>
