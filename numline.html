@@ -351,6 +351,59 @@
                     }
                 ],
                 numberLine: { start: 0, end: 20, interval: 1, show: [0] }
+            },
+            {
+                name: "Submarine Story",
+                story: [
+                    {
+                        txt: "The submarine starts at X meters below sea level",
+                        pos: 17,  // Actual value for illustration (X=17 in the final solution)
+                        label: "x"
+                    },
+                    {
+                        txt: "It descends to twice that depth!",
+                        pos: 34,  // 2x (34 when x=17)
+                        label: "2x"
+                    },
+                    {
+                        txt: "Then it dives an additional 7 meters",
+                        pos: 41,  // 2x + 7 (41 when x=17)
+                        label: "2x + 7"
+                    },
+                    {
+                        txt: "Now it is 41 meters below sea level",
+                        pos: 41,
+                        label: "41"
+                    },
+                    {
+                        txt: "What is the value of X?",
+                        pos: 41,
+                        label: "41"
+                    }
+                ],
+                equation: ["2x + 7", "=", "41"],
+                revstory: [
+                    {
+                        txt: "Diving 7 more meters is symbolized by '+7'. To reverse this, subtract 7 from both sides. Now we’re at 34 meters.",
+                        pos: 34,
+                        label: "34",
+                        equ: ["2x", "=", "34"],
+                        pre_equ: ["-7", "", "-7"]
+                    },
+                    {
+                        txt: "Doubling the depth is symbolized by '2x'. To reverse it, divide by 2. Now we’re at 17 meters. So x = 17!",
+                        pos: 17,
+                        label: "x = 17",
+                        equ: ["x", "=", "17"],
+                        pre_equ: ["/2", "", "/2"]
+                    }
+                ],
+                numberLine: {
+                    start: 0,
+                    end: 45,
+                    interval: 5,
+                    show: [0, 10, 20, 30, 40]
+                }
             }
             // Add other stories in the same format...
         ];
