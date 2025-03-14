@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pi Approximation by Half-Circle Segments</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            line-height: 1.6;
+        }
+        .container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        canvas {
+            border: 1px solid #ddd;
+            margin: 20px 0;
+        }
+        .controls {
+            width: 100%;
+            margin-bottom: 20px;
+        }
+        .slider-container {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+        #segmentSlider {
+            flex-grow: 1;
+        }
+        .results {
+            background-color: #f5f5f5;
+            padding: 15px;
+            border-radius: 5px;
+            width: 100%;
+            box-sizing: border-box;
+        }
+        h1 {
+            text-align: center;
+            color: #333;
+        }
+        .explanation {
+            margin-top: 30px;
+            background-color: #f9f9f9;
+            padding: 15px;
+            border-radius: 5px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Approximating π Using Half-Circle Segments</h1>
+        
+        <div class="controls">
+            <div class="slider-container">
+                <label for="segmentSlider">Number of segments:</label>
+                <input type="range" id="segmentSlider" min="2" max="200" value="6">
+                <span id="segmentValue">6</span>
+            </div>
+        </div>
+        
+        <canvas id="piCanvas" width="600" height="400"></canvas>
+        
+        <div class="results">
+            <p><strong>Approximation of π:</strong> <span id="piApprox">0</span></p>
+            <p><strong>Actual value of π:</strong> <span id="actualPi">3.14159265359</span></p>
+            <p><strong>Error:</strong> <span id="piError">0</span></p>
+        </div>
+        
+        <div class="explanation">
+            <h3>How it works</h3>
+            <p>This demonstration approximates π by calculating the total length of straight-line segments along a half-circle with radius 1.</p>
+            <p>As the number of segments increases, the approximation gets closer to the true value of π.</p>
+            <p>In the limit as the number of segments approaches infinity, the sum of segment lengths approaches π exactly.</p>
+        </div>
+        
+        <footer style="margin-top: 30px; text-align: center; color: #666; border-top: 1px solid #ddd; padding-top: 15px; width: 100%;">
+            &copy; Copyright David Snitkof and Eli Snitkof 2025
+        </footer>
+    </div>
+
+    <script>
+        // Get elements
+        const canvas = document.getElementById('piCanvas');
+        const ctx = canvas.getContext('2d');
+        const slider = document.getElementById('segmentSlider');
+        const segmentValue = document.getElementById('segmentValue');
+        const piApprox = document.getElementById('piApprox');
+        const actualPi = document.getElementById('actualPi');
+        const piError = document.getElementById('piError');
+        
+        // Set actual pi value
+        const PI = Math.PI;
+        actualPi.textContent = PI.toFixed(8);
+        
+        // Function to get y-coordinate on circle given x and radius
+        function getY(x, radius) {
+            return Math.sqrt(radius**2 - x**2);
+        }
+        
+        // Function to approximate pi
+        function approximatePi(breaks) {
+            const step = 2 / breaks;
+            
+            // Generate x values
+            let xs = [];
+            for (let x = -1; x < 1; x += step) {
+                xs.push(x);
+            }
+            xs.push(1);
+            
+            // Generate coordinates
+            const coords = xs.map(x => [x, getY(x, 1)]);
+            
+            // Calculate total distance
+            let totalDistance = 0;
+            for (let i = 1; i < coords.length; i++) {
+                const a = coords[i-1];
+                const b = coords[i];
+                const distance = Math.sqrt((a[0] - b[0])**2 + (a[1] - b[1])**2);
+                totalDistance += distance;
+            }
+            
+            // Calculate error
+            const error = PI - totalDistance;
+            
+            return {
+                approximation: totalDistance,
+                error: error,
+                coordinates: coords
+            };
+        }
+        
+        // Function to draw the visualization
+        function drawVisualization(breaks) {
+            // Clear canvas
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            
+            // Calculate pi approximation
+            const result = approximatePi(breaks);
+            const coords = result.coordinates;
+            
+            // Update display values
+            piApprox.textContent = result.approximation.toFixed(8);
+            piError.textContent = result.error.toFixed(8);
+            
+            // Set up canvas transformation
+            const scale = 150;
+            const centerX = canvas.width / 2;
+            const centerY = canvas.height / 2;
+            
+            // Draw coordinate axes
+            ctx.beginPath();
+            ctx.strokeStyle = 'rgba(0, 0, 0, 0.3)';
+            ctx.moveTo(0, centerY);
+            ctx.lineTo(canvas.width, centerY);
+            ctx.moveTo(centerX, 0);
+            ctx.lineTo(centerX, canvas.height);
+            ctx.stroke();
+            
+            // Draw grid
+            ctx.beginPath();
+            ctx.strokeStyle = 'rgba(0, 0, 0, 0.1)';
+            for (let i = -5; i <= 5; i++) {
+                ctx.moveTo(centerX + i * scale, 0);
+                ctx.lineTo(centerX + i * scale, canvas.height);
+                ctx.moveTo(0, centerY + i * scale);
+                ctx.lineTo(canvas.width, centerY + i * scale);
+            }
+            ctx.stroke();
+            
+            // Draw the half-circle
+            ctx.beginPath();
+            ctx.strokeStyle = 'blue';
+            ctx.lineWidth = 2;
+            ctx.arc(centerX, centerY, scale, 0, Math.PI, true);
+            ctx.stroke();
+            
+            // Draw the segments
+            ctx.beginPath();
+            ctx.strokeStyle = 'green';
+            ctx.lineWidth = 2;
+            ctx.moveTo(centerX + coords[0][0] * scale, centerY - coords[0][1] * scale);
+            
+            for (let i = 1; i < coords.length; i++) {
+                ctx.lineTo(centerX + coords[i][0] * scale, centerY - coords[i][1] * scale);
+            }
+            ctx.stroke();
+            
+            // Draw the points
+            ctx.fillStyle = 'green';
+            for (const coord of coords) {
+                ctx.beginPath();
+                ctx.arc(centerX + coord[0] * scale, centerY - coord[1] * scale, 4, 0, 2 * Math.PI);
+                ctx.fill();
+            }
+            
+            // Add text for the approximation
+            ctx.fillStyle = 'black';
+            ctx.font = '14px Arial';
+            ctx.textAlign = 'center';
+            ctx.fillText(`Segments: ${breaks}`, centerX, centerY + scale + 30);
+        }
+        
+        // Update when slider changes
+        slider.addEventListener('input', function() {
+            const breaks = parseInt(this.value);
+            segmentValue.textContent = breaks;
+            drawVisualization(breaks);
+        });
+        
+        // Initial draw
+        drawVisualization(parseInt(slider.value));
+    </script>
+</body>
+</html>

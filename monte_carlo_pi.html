@@ -1,0 +1,328 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Monte Carlo Pi Approximation</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            line-height: 1.6;
+        }
+        .container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        canvas {
+            border: 1px solid #ddd;
+            margin: 20px 0;
+            background-color: #f9f9f9;
+        }
+        .controls {
+            width: 100%;
+            margin-bottom: 20px;
+        }
+        .slider-container {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+        #pointsSlider {
+            flex-grow: 1;
+        }
+        .results {
+            background-color: #f5f5f5;
+            padding: 15px;
+            border-radius: 5px;
+            width: 100%;
+            box-sizing: border-box;
+            margin-bottom: 20px;
+        }
+        h1 {
+            text-align: center;
+            color: #333;
+        }
+        .explanation {
+            margin-top: 30px;
+            background-color: #f9f9f9;
+            padding: 15px;
+            border-radius: 5px;
+        }
+        button {
+            background-color: #4CAF50;
+            border: none;
+            color: white;
+            padding: 10px 20px;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 16px;
+            margin: 4px 2px;
+            cursor: pointer;
+            border-radius: 4px;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+        .control-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+        .speed-control {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Approximating π Using Monte Carlo Method</h1>
+        
+        <div class="controls">
+            <div class="slider-container">
+                <label for="pointsSlider">Number of points:</label>
+                <input type="range" id="pointsSlider" min="1000" max="200000" value="10000" step="1000">
+                <span id="pointsValue">10000</span>
+            </div>
+            
+            <div class="control-row">
+                <button id="startButton">Try It</button>
+                <div class="speed-control">
+                    <label for="speedSlider">Animation Speed:</label>
+                    <input type="range" id="speedSlider" min="10" max="1000" value="100" step="10">
+                </div>
+            </div>
+        </div>
+        
+        <div class="results">
+            <p><strong>Points inside circle:</strong> <span id="insideCount">0</span></p>
+            <p><strong>Total points:</strong> <span id="totalCount">0</span></p>
+            <p><strong>Approximation of π:</strong> <span id="piApprox">0</span></p>
+            <p><strong>Actual value of π:</strong> <span id="actualPi">3.14159265359</span></p>
+            <p><strong>Error:</strong> <span id="piError">0</span></p>
+        </div>
+        
+        <canvas id="monteCarloCanvas" width="500" height="500"></canvas>
+        
+        <div class="explanation">
+            <h3>How the Monte Carlo Method Works</h3>
+            <p>This demonstration approximates π using random sampling:</p>
+            <ol>
+                <li>We generate random points within a 2×2 square centered at the origin.</li>
+                <li>We count how many points fall inside a circle with radius 1 (also centered at the origin).</li>
+                <li>The ratio of points inside the circle to the total number of points, multiplied by 4, approximates π.</li>
+            </ol>
+            <p>This works because the ratio of the circle's area (πr²) to the square's area (4r²) is π/4. As the number of random points increases, our approximation gets closer to the true value of π.</p>
+        </div>
+        
+        <footer style="margin-top: 30px; text-align: center; color: #666; border-top: 1px solid #ddd; padding-top: 15px; width: 100%;">
+            &copy; Copyright David Snitkof and Eli Snitkof 2025
+        </footer>
+    </div>
+
+    <script>
+        // Get elements
+        const canvas = document.getElementById('monteCarloCanvas');
+        const ctx = canvas.getContext('2d');
+        const slider = document.getElementById('pointsSlider');
+        const pointsValue = document.getElementById('pointsValue');
+        const startButton = document.getElementById('startButton');
+        const speedSlider = document.getElementById('speedSlider');
+        const insideCount = document.getElementById('insideCount');
+        const totalCount = document.getElementById('totalCount');
+        const piApprox = document.getElementById('piApprox');
+        const actualPi = document.getElementById('actualPi');
+        const piError = document.getElementById('piError');
+        
+        // Set actual pi value
+        const PI = Math.PI;
+        actualPi.textContent = PI.toFixed(8);
+        
+        // Variables for simulation
+        let animationId = null;
+        let pointsInside = 0;
+        let pointsTotal = 0;
+        let pointsToGenerate = parseInt(slider.value);
+        let pointsPerFrame = 100;
+        let pointsGenerated = 0;
+        
+        // Arrays to store points
+        let circlePointsX = [];
+        let circlePointsY = [];
+        let squarePointsX = [];
+        let squarePointsY = [];
+        
+        // Update points value display when slider changes
+        slider.addEventListener('input', function() {
+            pointsToGenerate = parseInt(this.value);
+            pointsValue.textContent = pointsToGenerate;
+        });
+        
+        // Initialize canvas
+        function initCanvas() {
+            const width = canvas.width;
+            const height = canvas.height;
+            const scale = Math.min(width, height) / 2.2;
+            const centerX = width / 2;
+            const centerY = height / 2;
+            
+            // Clear canvas
+            ctx.clearRect(0, 0, width, height);
+            
+            // Draw coordinate axes
+            ctx.beginPath();
+            ctx.strokeStyle = 'rgba(0, 0, 0, 0.3)';
+            ctx.moveTo(0, centerY);
+            ctx.lineTo(width, centerY);
+            ctx.moveTo(centerX, 0);
+            ctx.lineTo(centerX, height);
+            ctx.stroke();
+            
+            // Draw the square
+            ctx.beginPath();
+            ctx.strokeStyle = 'black';
+            ctx.lineWidth = 2;
+            ctx.rect(centerX - scale, centerY - scale, scale * 2, scale * 2);
+            ctx.stroke();
+            
+            // Draw the circle
+            ctx.beginPath();
+            ctx.strokeStyle = 'blue';
+            ctx.lineWidth = 2;
+            ctx.arc(centerX, centerY, scale, 0, 2 * Math.PI);
+            ctx.stroke();
+            
+            // Add labels
+            ctx.fillStyle = 'black';
+            ctx.font = '14px Arial';
+            ctx.textAlign = 'center';
+            ctx.fillText('(-1, 1)', centerX - scale, centerY - scale - 10);
+            ctx.fillText('(1, 1)', centerX + scale, centerY - scale - 10);
+            ctx.fillText('(-1, -1)', centerX - scale, centerY + scale + 20);
+            ctx.fillText('(1, -1)', centerX + scale, centerY + scale + 20);
+        }
+        
+        // Function to draw a point
+        function drawPoint(x, y, isInside) {
+            const width = canvas.width;
+            const height = canvas.height;
+            const scale = Math.min(width, height) / 2.2;
+            const centerX = width / 2;
+            const centerY = height / 2;
+            
+            // Transform coordinates to canvas space
+            const canvasX = centerX + x * scale;
+            const canvasY = centerY - y * scale;
+            
+            // Draw the point
+            ctx.beginPath();
+            ctx.fillStyle = isInside ? 'blue' : 'red';
+            ctx.arc(canvasX, canvasY, 2, 0, 2 * Math.PI);
+            ctx.fill();
+        }
+        
+        // Function to generate random points and update the simulation
+        function updateSimulation() {
+            const batchSize = Math.min(pointsPerFrame, pointsToGenerate - pointsGenerated);
+            
+            if (batchSize <= 0) {
+                cancelAnimationFrame(animationId);
+                animationId = null;
+                startButton.textContent = "Try Again";
+                startButton.disabled = false;
+                return;
+            }
+            
+            for (let i = 0; i < batchSize; i++) {
+                // Generate random point in [-1, 1] x [-1, 1]
+                const x = Math.random() * 2 - 1;
+                const y = Math.random() * 2 - 1;
+                
+                // Check if point is inside circle
+                const distanceFromOrigin = Math.sqrt(x*x + y*y);
+                const isInside = distanceFromOrigin < 1;
+                
+                // Update counts
+                if (isInside) {
+                    pointsInside++;
+                    circlePointsX.push(x);
+                    circlePointsY.push(y);
+                } else {
+                    squarePointsX.push(x);
+                    squarePointsY.push(y);
+                }
+                
+                // Draw the point
+                drawPoint(x, y, isInside);
+                
+                pointsTotal++;
+                pointsGenerated++;
+            }
+            
+            // Update statistics
+            updateStats();
+            
+            // Continue animation
+            animationId = requestAnimationFrame(updateSimulation);
+        }
+        
+        // Function to update statistics
+        function updateStats() {
+            insideCount.textContent = pointsInside;
+            totalCount.textContent = pointsTotal;
+            
+            if (pointsTotal > 0) {
+                const piEstimate = (pointsInside * 4) / pointsTotal;
+                const error = Math.abs(PI - piEstimate);
+                
+                piApprox.textContent = piEstimate.toFixed(8);
+                piError.textContent = error.toFixed(8);
+            }
+        }
+        
+        // Start button click handler
+        startButton.addEventListener('click', function() {
+            if (animationId !== null) {
+                cancelAnimationFrame(animationId);
+                animationId = null;
+            }
+            
+            // Reset simulation
+            pointsInside = 0;
+            pointsTotal = 0;
+            pointsGenerated = 0;
+            circlePointsX = [];
+            circlePointsY = [];
+            squarePointsX = [];
+            squarePointsY = [];
+            
+            // Update display
+            updateStats();
+            
+            // Initialize canvas
+            initCanvas();
+            
+            // Start animation
+            startButton.textContent = "Running...";
+            startButton.disabled = true;
+            animationId = requestAnimationFrame(updateSimulation);
+        });
+        
+        // Speed slider handler
+        speedSlider.addEventListener('input', function() {
+            pointsPerFrame = parseInt(this.value);
+        });
+        
+        // Initial setup
+        initCanvas();
+    </script>
+</body>
+</html> 
