@@ -1,0 +1,107 @@
+body {
+    background-color: #333333;
+    color: #ffffff;
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+}
+
+.container {
+    text-align: center;
+    max-width: 800px;
+    padding: 20px;
+}
+
+h1 {
+    margin-bottom: 40px;
+    color: #ff9933; /* Carrot orange */
+}
+
+.binary-display {
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+    margin-bottom: 40px;
+}
+
+.digit-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.digit {
+    background-color: #222222;
+    color: #ff5500; /* Digital clock orange-red */
+    font-family: 'Courier New', monospace;
+    font-size: 64px;
+    font-weight: bold;
+    width: 80px;
+    height: 100px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 10px;
+    margin-bottom: 10px;
+    box-shadow: 0 0 10px rgba(255, 85, 0, 0.5);
+    text-shadow: 0 0 10px rgba(255, 85, 0, 0.8);
+}
+
+.key-symbol {
+    font-size: 24px;
+    margin-bottom: 5px;
+    color: #dddddd;
+}
+
+.power {
+    font-size: 16px;
+    color: #aaaaaa;
+}
+
+.decimal-display {
+    background-color: #222222;
+    padding: 20px;
+    border-radius: 10px;
+    margin-bottom: 30px;
+    display: inline-block;
+}
+
+.decimal-display h2 {
+    margin-top: 0;
+    margin-bottom: 10px;
+    color: #dddddd;
+}
+
+#decimal-value {
+    font-size: 48px;
+    font-weight: bold;
+    color: #ff5500; /* Digital clock orange-red */
+    font-family: 'Courier New', monospace;
+    text-shadow: 0 0 10px rgba(255, 85, 0, 0.8);
+}
+
+.instructions {
+    background-color: rgba(255, 255, 255, 0.1);
+    padding: 20px;
+    border-radius: 10px;
+    text-align: left;
+}
+
+.instructions p {
+    margin-top: 0;
+}
+
+.instructions ul {
+    padding-left: 20px;
+}
+
+/* Active state for digits when toggled to 1 */
+.digit.active {
+    color: #ff9900;
+    text-shadow: 0 0 15px rgba(255, 153, 0, 0.8);
+    box-shadow: 0 0 15px rgba(255, 153, 0, 0.7);
+} 

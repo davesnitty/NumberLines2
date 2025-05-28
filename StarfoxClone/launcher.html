@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Starfox Clone Launcher</title>
+    <style>
+        body {
+            font-family: 'Courier New', Courier, monospace;
+            background-color: #000;
+            color: #fff;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            height: 100vh;
+            margin: 0;
+            background-image: 
+                radial-gradient(white, rgba(255,255,255,.2) 2px, transparent 40px),
+                radial-gradient(white, rgba(255,255,255,.15) 1px, transparent 30px),
+                radial-gradient(white, rgba(255,255,255,.1) 2px, transparent 40px);
+            background-size: 550px 550px, 350px 350px, 250px 250px;
+            background-position: 0 0, 40px 60px, 130px 270px;
+        }
+        
+        .container {
+            background-color: rgba(0, 0, 0, 0.8);
+            padding: 40px;
+            border-radius: 20px;
+            text-align: center;
+            border: 2px solid #5bf;
+            box-shadow: 0 0 20px #5bf;
+            max-width: 800px;
+        }
+        
+        h1 {
+            color: #5bf;
+            font-size: 48px;
+            margin-bottom: 20px;
+            text-shadow: 0 0 10px #5bf;
+            text-transform: uppercase;
+        }
+        
+        p {
+            font-size: 18px;
+            line-height: 1.5;
+            margin-bottom: 30px;
+        }
+        
+        .play-button {
+            background-color: #5bf;
+            color: #000;
+            border: none;
+            padding: 15px 30px;
+            font-size: 24px;
+            border-radius: 10px;
+            cursor: pointer;
+            font-family: 'Courier New', Courier, monospace;
+            font-weight: bold;
+            text-transform: uppercase;
+            transition: all 0.3s;
+        }
+        
+        .play-button:hover {
+            background-color: #7df;
+            transform: scale(1.05);
+            box-shadow: 0 0 20px #5bf;
+        }
+        
+        .controls {
+            display: flex;
+            justify-content: space-around;
+            margin: 30px 0;
+        }
+        
+        .control-group {
+            text-align: left;
+        }
+        
+        .key {
+            display: inline-block;
+            background-color: #333;
+            color: #fff;
+            padding: 5px 10px;
+            border-radius: 5px;
+            margin: 5px;
+            min-width: 30px;
+            text-align: center;
+            border: 1px solid #666;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Starfox Clone</h1>
+        <p>Pilot your ship through space, avoiding obstacles and enemies in this retro-style game inspired by the classic Starfox!</p>
+        
+        <div class="controls">
+            <div class="control-group">
+                <h3>Movement</h3>
+                <p><span class="key">↑</span> Move Up</p>
+                <p><span class="key">↓</span> Move Down</p>
+                <p><span class="key">←</span> Move Left</p>
+                <p><span class="key">→</span> Move Right</p>
+            </div>
+            <div class="control-group">
+                <h3>Actions</h3>
+                <p><span class="key">Space</span> Fire Lasers</p>
+            </div>
+        </div>
+        
+        <a href="index.html"><button class="play-button">Launch Game</button></a>
+        
+        <p style="margin-top: 30px; font-size: 14px;">Note: Make sure your sound is enabled for the full experience!</p>
+    </div>
+    
+    <script>
+        // Add a little animation to the stars
+        document.addEventListener('mousemove', (e) => {
+            const x = e.clientX / window.innerWidth;
+            const y = e.clientY / window.innerHeight;
+            
+            document.body.style.backgroundPosition = 
+                `${-x * 20}px ${-y * 20}px, 
+                ${40 - x * 40}px ${60 - y * 40}px, 
+                ${130 - x * 60}px ${270 - y * 60}px`;
+        });
+    </script>
+</body>
+</html> 

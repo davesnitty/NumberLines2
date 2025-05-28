@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Binary Carrots</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Binary Carrots</h1>
+        
+        <div class="binary-display">
+            <div class="digit-container">
+                <div class="digit" id="digit4">0</div>
+                <div class="key-symbol">↑</div>
+                <div class="power">2<sup>4</sup> = 16</div>
+            </div>
+            <div class="digit-container">
+                <div class="digit" id="digit3">0</div>
+                <div class="key-symbol">→</div>
+                <div class="power">2<sup>3</sup> = 8</div>
+            </div>
+            <div class="digit-container">
+                <div class="digit" id="digit2">0</div>
+                <div class="key-symbol">←</div>
+                <div class="power">2<sup>2</sup> = 4</div>
+            </div>
+            <div class="digit-container">
+                <div class="digit" id="digit1">0</div>
+                <div class="key-symbol">↓</div>
+                <div class="power">2<sup>1</sup> = 2</div>
+            </div>
+            <div class="digit-container">
+                <div class="digit" id="digit0">0</div>
+                <div class="key-symbol">Space</div>
+                <div class="power">2<sup>0</sup> = 1</div>
+            </div>
+        </div>
+        
+        <div class="decimal-display">
+            <h2>Decimal Value:</h2>
+            <div id="decimal-value">0</div>
+        </div>
+        
+        <div class="instructions">
+            <p>Press the corresponding keys to toggle binary digits:</p>
+            <ul>
+                <li>↑ (Up Arrow): Toggle 16's digit</li>
+                <li>→ (Right Arrow): Toggle 8's digit</li>
+                <li>← (Left Arrow): Toggle 4's digit</li>
+                <li>↓ (Down Arrow): Toggle 2's digit</li>
+                <li>Space Bar: Toggle 1's digit</li>
+            </ul>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html> 
