@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Eli's Apps</title>
+    <style>
+        body {
+            font-family: 'Comic Sans MS', cursive, sans-serif;
+            background-color: #e6f3ff;
+            margin: 0;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background-color: white;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 0 20px rgba(0,0,0,0.1);
+        }
+
+        h1 {
+            color: #2196F3;
+            text-align: center;
+            font-size: 3em;
+            margin-bottom: 30px;
+        }
+
+        .section {
+            margin: 20px 0;
+            padding: 20px;
+            border-radius: 10px;
+        }
+
+        .math-section {
+            background-color: #e8f5e9;
+        }
+
+        .games-section {
+            background-color: #fff3e0;
+        }
+
+        h2 {
+            color: #333;
+            margin-bottom: 15px;
+        }
+
+        .app-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+        }
+
+        .app-link {
+            display: block;
+            padding: 15px;
+            background-color: white;
+            border-radius: 8px;
+            text-decoration: none;
+            color: #333;
+            text-align: center;
+            transition: transform 0.2s;
+            border: 2px solid #ddd;
+        }
+
+        .app-link:hover {
+            transform: scale(1.05);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+
+        .math-link {
+            border-color: #81c784;
+        }
+
+        .game-link {
+            border-color: #ffb74d;
+        }
+
+        .emoji {
+            font-size: 2em;
+            margin-bottom: 10px;
+        }
+
+        footer {
+            text-align: center;
+            margin-top: 30px;
+            padding-top: 20px;
+            border-top: 1px solid #ddd;
+            color: #666;
+            font-size: 0.9em;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🌟 Eli's Apps 🌟</h1>
+        
+        <div class="section math-section">
+            <h2>🧮 Cool Math Apps</h2>
+            <div class="app-grid">
+                <a href="monte_carlo_pi.html" class="app-link math-link">
+                    <div class="emoji">🎲</div>
+                    Monte Carlo Pi Simulation
+                </a>
+                <a href="approx_pi.html" class="app-link math-link">
+                    <div class="emoji">⭕</div>
+                    Approximation of Pi Using Circle Segments
+                </a>
+                <a href="numline.html" class="app-link math-link">
+                    <div class="emoji">➗</div>
+                    Number Line Algebra Stories
+                </a>
+            </div>
+        </div>
+
+        <div class="section games-section">
+            <h2>🎮 Awesome Games</h2>
+            <div class="app-grid">
+                <a href="StarfoxClone/index.html" class="app-link game-link">
+                    <div class="emoji">🚀</div>
+                    Starfox Clone Space Flyer
+                </a>
+                <a href="fireworks/index.html" class="app-link game-link">
+                    <div class="emoji">🎆</div>
+                    Fireworks
+                </a>
+                <a href="binary-carrots/index.html" class="app-link game-link">
+                    <div class="emoji">🥕</div>
+                    Binary Carrots
+                </a>
+            </div>
+        </div>
+    </div>
+    <footer>
+        &copy; David and Eli Snitkof 2025
+    </footer>
+</body>
+</html>
