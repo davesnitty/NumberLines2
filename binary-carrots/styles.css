@@ -104,4 +104,31 @@ h1 {
     color: #ff9900;
     text-shadow: 0 0 15px rgba(255, 153, 0, 0.8);
     box-shadow: 0 0 15px rgba(255, 153, 0, 0.7);
+}
+
+/* Clear button styling */
+.clear-button {
+    background-color: #ff5500;
+    color: white;
+    border: none;
+    padding: 12px 30px;
+    font-size: 18px;
+    font-weight: bold;
+    border-radius: 8px;
+    cursor: pointer;
+    margin-top: 15px;
+    margin-bottom: 15px;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+}
+
+.clear-button:hover {
+    background-color: #ff7733;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 8px rgba(0, 0, 0, 0.4);
+}
+
+.clear-button:active {
+    transform: translateY(0);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
 } 

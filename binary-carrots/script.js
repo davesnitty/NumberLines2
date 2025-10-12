@@ -37,6 +37,12 @@ document.addEventListener('DOMContentLoaded', () => {
         updateDisplay();
     };
     
+    // Clear all digits
+    const clearAll = () => {
+        binaryDigits.fill(0);
+        updateDisplay();
+    };
+    
     // Handle keydown events
     document.addEventListener('keydown', (event) => {
         // Prevent default behavior for the arrow keys and space
@@ -63,6 +69,10 @@ document.addEventListener('DOMContentLoaded', () => {
                 break;
         }
     });
+    
+    // Add click event listener to the clear button
+    const clearButton = document.getElementById('clear-button');
+    clearButton.addEventListener('click', clearAll);
     
     // Initial display update
     updateDisplay();
