@@ -1,0 +1,440 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lumberjack Game</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 20px;
+            background: linear-gradient(135deg, #87CEEB 0%, #98FB98 100%);
+            font-family: 'Comic Sans MS', cursive, sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        h1 {
+            color: #8B4513;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+            margin-bottom: 10px;
+        }
+
+        .game-info {
+            display: flex;
+            gap: 30px;
+            margin-bottom: 20px;
+            font-size: 18px;
+            font-weight: bold;
+            color: #8B4513;
+        }
+
+        .game-container {
+            position: relative;
+            border: 4px solid #8B4513;
+            border-radius: 10px;
+            box-shadow: 0 8px 16px rgba(0,0,0,0.3);
+            background: #90EE90;
+        }
+
+        #gameCanvas {
+            display: block;
+            background: linear-gradient(to bottom, #87CEEB 0%, #90EE90 30%, #228B22 100%);
+        }
+
+        .controls {
+            margin-top: 15px;
+            text-align: center;
+            color: #8B4513;
+            font-size: 16px;
+        }
+
+        .game-over {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: rgba(255, 255, 255, 0.95);
+            padding: 30px;
+            border-radius: 15px;
+            text-align: center;
+            box-shadow: 0 8px 16px rgba(0,0,0,0.3);
+            display: none;
+        }
+
+        .game-over h2 {
+            color: #8B4513;
+            margin-top: 0;
+        }
+
+        .restart-btn {
+            background: #4CAF50;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            font-size: 16px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-family: inherit;
+            margin-top: 15px;
+        }
+
+        .restart-btn:hover {
+            background: #45a049;
+        }
+    </style>
+</head>
+<body>
+    <h1>🪓 Lumberjack Game 🪓</h1>
+    
+    <div class="game-info">
+        <div>Score: <span id="score">0</span></div>
+        <div>Time: <span id="timer">60</span>s</div>
+    </div>
+
+    <div class="game-container">
+        <canvas id="gameCanvas" width="800" height="600"></canvas>
+        <div class="game-over" id="gameOver">
+            <h2>Game Over!</h2>
+            <p>Final Score: <span id="finalScore">0</span></p>
+            <button class="restart-btn" onclick="restartGame()">Play Again</button>
+        </div>
+    </div>
+
+    <div class="controls">
+        <p>🎮 Use arrow keys to move | 🪓 Spacebar to cut trees | ⚡ Dodge the bird poop!</p>
+    </div>
+
+    <script>
+        const canvas = document.getElementById('gameCanvas');
+        const ctx = canvas.getContext('2d');
+        const scoreElement = document.getElementById('score');
+        const timerElement = document.getElementById('timer');
+        const gameOverElement = document.getElementById('gameOver');
+        const finalScoreElement = document.getElementById('finalScore');
+
+        // Game state
+        let gameRunning = true;
+        let score = 0;
+        let timeLeft = 60;
+        let gameTime = 0;
+
+        // Player object
+        const player = {
+            x: 400,
+            y: 500,
+            width: 40,
+            height: 60,
+            speed: 5,
+            cutting: false,
+            cutTime: 0
+        };
+
+        // Trees array
+        let trees = [];
+        let birdPoops = [];
+        let birds = [];
+
+        // Input handling
+        const keys = {};
+        document.addEventListener('keydown', (e) => {
+            keys[e.code] = true;
+            if (e.code === 'Space') {
+                e.preventDefault();
+                if (gameRunning && !player.cutting) {
+                    player.cutting = true;
+                    player.cutTime = 0;
+                }
+            }
+        });
+
+        document.addEventListener('keyup', (e) => {
+            keys[e.code] = false;
+        });
+
+        // Initialize game
+        function initGame() {
+            trees = [];
+            birdPoops = [];
+            birds = [];
+            score = 0;
+            timeLeft = 60;
+            gameTime = 0;
+            gameRunning = true;
+            player.x = 400;
+            player.y = 500;
+            player.cutting = false;
+            
+            // Create initial trees
+            for (let i = 0; i < 8; i++) {
+                createTree();
+            }
+            
+            // Create initial birds
+            for (let i = 0; i < 3; i++) {
+                createBird();
+            }
+            
+            gameOverElement.style.display = 'none';
+            updateUI();
+        }
+
+        function createTree() {
+            trees.push({
+                x: Math.random() * (canvas.width - 60),
+                y: Math.random() * 400 + 100,
+                width: 30,
+                height: 80,
+                cut: false,
+                cutProgress: 0
+            });
+        }
+
+        function createBird() {
+            birds.push({
+                x: Math.random() * canvas.width,
+                y: 50,
+                width: 30,
+                height: 20,
+                speed: 1 + Math.random() * 2,
+                poopTimer: 0,
+                poopInterval: 60 + Math.random() * 120
+            });
+        }
+
+        function createBirdPoop(x, y) {
+            birdPoops.push({
+                x: x,
+                y: y,
+                width: 8,
+                height: 8,
+                speed: 3 + Math.random() * 2
+            });
+        }
+
+        function updatePlayer() {
+            if (!gameRunning) return;
+
+            // Movement
+            if (keys['ArrowLeft'] && player.x > 0) {
+                player.x -= player.speed;
+            }
+            if (keys['ArrowRight'] && player.x < canvas.width - player.width) {
+                player.x += player.speed;
+            }
+            if (keys['ArrowUp'] && player.y > 0) {
+                player.y -= player.speed;
+            }
+            if (keys['ArrowDown'] && player.y < canvas.height - player.height) {
+                player.y += player.speed;
+            }
+
+            // Cutting animation
+            if (player.cutting) {
+                player.cutTime++;
+                if (player.cutTime > 30) {
+                    player.cutting = false;
+                    player.cutTime = 0;
+                }
+            }
+        }
+
+        function updateTrees() {
+            trees.forEach((tree, index) => {
+                if (player.cutting && !tree.cut) {
+                    // Check if player is near tree
+                    const distance = Math.sqrt(
+                        Math.pow(player.x + player.width/2 - (tree.x + tree.width/2), 2) +
+                        Math.pow(player.y + player.height/2 - (tree.y + tree.height/2), 2)
+                    );
+                    
+                    if (distance < 50) {
+                        tree.cutProgress += 2;
+                        if (tree.cutProgress >= 100) {
+                            tree.cut = true;
+                            score += 5;
+                            updateUI();
+                        }
+                    }
+                }
+            });
+        }
+
+        function updateBirds() {
+            birds.forEach(bird => {
+                bird.x += bird.speed;
+                bird.poopTimer++;
+                
+                if (bird.x > canvas.width) {
+                    bird.x = -bird.width;
+                }
+                
+                if (bird.poopTimer > bird.poopInterval) {
+                    createBirdPoop(bird.x + bird.width/2, bird.y + bird.height);
+                    bird.poopTimer = 0;
+                    bird.poopInterval = 60 + Math.random() * 120;
+                }
+            });
+        }
+
+        function updateBirdPoops() {
+            birdPoops.forEach((poop, index) => {
+                poop.y += poop.speed;
+                
+                // Check collision with player
+                if (poop.x < player.x + player.width &&
+                    poop.x + poop.width > player.x &&
+                    poop.y < player.y + player.height &&
+                    poop.y + poop.height > player.y) {
+                    gameOver();
+                }
+                
+                // Remove poop that fell off screen
+                if (poop.y > canvas.height) {
+                    birdPoops.splice(index, 1);
+                }
+            });
+        }
+
+        function gameOver() {
+            gameRunning = false;
+            finalScoreElement.textContent = score;
+            gameOverElement.style.display = 'block';
+        }
+
+        function updateUI() {
+            scoreElement.textContent = score;
+            timerElement.textContent = timeLeft;
+        }
+
+        function restartGame() {
+            initGame();
+        }
+
+        function gameLoop() {
+            if (gameRunning) {
+                gameTime++;
+                
+                // Update timer
+                if (gameTime % 60 === 0) {
+                    timeLeft--;
+                    updateUI();
+                    if (timeLeft <= 0) {
+                        gameOver();
+                    }
+                }
+                
+                // Update game objects
+                updatePlayer();
+                updateTrees();
+                updateBirds();
+                updateBirdPoops();
+                
+                // Add new trees occasionally
+                if (Math.random() < 0.01) {
+                    createTree();
+                }
+            }
+            
+            draw();
+            requestAnimationFrame(gameLoop);
+        }
+
+        function draw() {
+            // Clear canvas
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            
+            // Draw sky gradient
+            const gradient = ctx.createLinearGradient(0, 0, 0, canvas.height);
+            gradient.addColorStop(0, '#87CEEB');
+            gradient.addColorStop(0.3, '#90EE90');
+            gradient.addColorStop(1, '#228B22');
+            ctx.fillStyle = gradient;
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+            
+            // Draw trees
+            trees.forEach(tree => {
+                if (!tree.cut) {
+                    // Tree trunk
+                    ctx.fillStyle = '#8B4513';
+                    ctx.fillRect(tree.x + 10, tree.y + 40, 10, 40);
+                    
+                    // Tree leaves
+                    ctx.fillStyle = '#228B22';
+                    ctx.beginPath();
+                    ctx.arc(tree.x + 15, tree.y + 30, 20, 0, Math.PI * 2);
+                    ctx.fill();
+                    
+                    // Cutting progress
+                    if (tree.cutProgress > 0) {
+                        ctx.fillStyle = 'rgba(255, 0, 0, 0.5)';
+                        ctx.fillRect(tree.x, tree.y, (tree.width * tree.cutProgress) / 100, 5);
+                    }
+                } else {
+                    // Stump
+                    ctx.fillStyle = '#654321';
+                    ctx.fillRect(tree.x + 10, tree.y + 50, 10, 20);
+                }
+            });
+            
+            // Draw birds
+            birds.forEach(bird => {
+                ctx.fillStyle = '#8B4513';
+                ctx.beginPath();
+                ctx.arc(bird.x + 15, bird.y + 10, 8, 0, Math.PI * 2);
+                ctx.fill();
+                
+                // Wings
+                ctx.fillStyle = '#654321';
+                ctx.beginPath();
+                ctx.arc(bird.x + 5, bird.y + 8, 6, 0, Math.PI * 2);
+                ctx.fill();
+                ctx.beginPath();
+                ctx.arc(bird.x + 25, bird.y + 8, 6, 0, Math.PI * 2);
+                ctx.fill();
+            });
+            
+            // Draw bird poops
+            birdPoops.forEach(poop => {
+                ctx.fillStyle = '#8B4513';
+                ctx.beginPath();
+                ctx.arc(poop.x, poop.y, 4, 0, Math.PI * 2);
+                ctx.fill();
+            });
+            
+            // Draw player
+            ctx.fillStyle = '#FF6B6B';
+            ctx.fillRect(player.x, player.y, player.width, player.height);
+            
+            // Player head
+            ctx.fillStyle = '#FFDBAC';
+            ctx.beginPath();
+            ctx.arc(player.x + 20, player.y + 15, 12, 0, Math.PI * 2);
+            ctx.fill();
+            
+            // Chainsaw when cutting
+            if (player.cutting) {
+                ctx.fillStyle = '#C0C0C0';
+                ctx.fillRect(player.x + 35, player.y + 20, 15, 8);
+                ctx.fillStyle = '#FFD700';
+                ctx.fillRect(player.x + 50, player.y + 22, 8, 4);
+            }
+            
+            // Player eyes
+            ctx.fillStyle = '#000';
+            ctx.beginPath();
+            ctx.arc(player.x + 16, player.y + 12, 2, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.beginPath();
+            ctx.arc(player.x + 24, player.y + 12, 2, 0, Math.PI * 2);
+            ctx.fill();
+        }
+
+        // Start the game
+        initGame();
+        gameLoop();
+    </script>
+</body>
+</html>
