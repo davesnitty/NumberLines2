@@ -1,0 +1,380 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Math Munchers</title>
+    <style>
+      :root {
+        --ink: #0a1b2f;
+        --ink-soft: #1a2f4a;
+        --glow: #5cf2a8;
+        --accent: #ff9b4a;
+        --accent-2: #43d3ff;
+        --panel: rgba(255, 255, 255, 0.85);
+        --panel-strong: rgba(255, 255, 255, 0.96);
+        --danger: #ff4d6d;
+        --grid: #0b2a46;
+        --tile: #0e3d63;
+        --tile-good: #1f7a4f;
+        --tile-bad: #6a1b2a;
+        --font-title: "Trebuchet MS", "Lucida Sans Unicode", "Lucida Grande",
+          "Lucida Sans", Arial, sans-serif;
+        --font-body: "Verdana", "Geneva", "Tahoma", sans-serif;
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      body {
+        margin: 0;
+        font-family: var(--font-body);
+        color: var(--ink);
+        min-height: 100vh;
+        background: radial-gradient(circle at 20% 20%, #f8f0d0, #d5f1ff 50%, #f1d3ff 100%);
+        display: flex;
+        align-items: stretch;
+        justify-content: center;
+      }
+
+      .app {
+        width: min(1200px, 100%);
+        padding: 24px;
+        display: grid;
+        gap: 20px;
+        grid-template-columns: minmax(260px, 320px) minmax(0, 1fr);
+      }
+
+      header {
+        grid-column: 1 / -1;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 16px 20px;
+        border-radius: 20px;
+        background: linear-gradient(120deg, #0b2f4a, #133c61);
+        color: #f5f6ff;
+        box-shadow: 0 20px 45px rgba(10, 24, 48, 0.25);
+      }
+
+      header h1 {
+        margin: 0;
+        font-family: var(--font-title);
+        letter-spacing: 1px;
+        font-size: clamp(24px, 3vw, 34px);
+      }
+
+      header .mode-pill {
+        background: rgba(255, 255, 255, 0.16);
+        border: 1px solid rgba(255, 255, 255, 0.3);
+        padding: 6px 12px;
+        border-radius: 999px;
+        font-size: 14px;
+        text-transform: uppercase;
+        letter-spacing: 2px;
+      }
+
+      .panel {
+        background: var(--panel);
+        border-radius: 18px;
+        padding: 16px;
+        box-shadow: 0 12px 30px rgba(20, 40, 80, 0.12);
+        display: flex;
+        flex-direction: column;
+        gap: 14px;
+      }
+
+      .panel h2 {
+        margin: 0;
+        font-family: var(--font-title);
+        font-size: 18px;
+        color: var(--ink-soft);
+      }
+
+      .stats {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 10px;
+      }
+
+      .stat-card {
+        background: var(--panel-strong);
+        border-radius: 12px;
+        padding: 10px 12px;
+        display: flex;
+        flex-direction: column;
+        gap: 4px;
+      }
+
+      .stat-card span {
+        font-size: 12px;
+        color: #3a4a62;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+      }
+
+      .stat-card strong {
+        font-size: 20px;
+        color: var(--ink);
+      }
+
+      .rule-box {
+        background: linear-gradient(135deg, #142a44, #204466);
+        color: #f1f5ff;
+        border-radius: 14px;
+        padding: 12px 14px;
+        display: flex;
+        flex-direction: column;
+        gap: 6px;
+      }
+
+      .rule-box h3 {
+        margin: 0;
+        font-size: 16px;
+        font-family: var(--font-title);
+        letter-spacing: 1px;
+      }
+
+      .rule-box p {
+        margin: 0;
+        font-size: 14px;
+        line-height: 1.4;
+      }
+
+      .controls {
+        display: grid;
+        gap: 10px;
+      }
+
+      .controls button,
+      .controls select,
+      .controls label {
+        font-family: var(--font-body);
+      }
+
+      .controls button {
+        border: none;
+        border-radius: 12px;
+        padding: 10px 12px;
+        font-weight: 600;
+        cursor: pointer;
+        background: #133c61;
+        color: #f5f8ff;
+        transition: transform 0.2s ease, box-shadow 0.2s ease;
+      }
+
+      .controls button:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 10px 18px rgba(15, 45, 75, 0.2);
+      }
+
+      .controls .secondary {
+        background: #eef2f7;
+        color: #20314b;
+        border: 1px solid #c4d0e0;
+      }
+
+      .toggle {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        background: var(--panel-strong);
+        padding: 8px 10px;
+        border-radius: 12px;
+        font-size: 14px;
+      }
+
+      .toggle input {
+        width: 18px;
+        height: 18px;
+      }
+
+      .canvas-wrap {
+        position: relative;
+        background: #0b2036;
+        border-radius: 22px;
+        padding: 18px;
+        box-shadow: 0 25px 50px rgba(11, 32, 54, 0.35);
+        display: grid;
+        gap: 12px;
+      }
+
+      canvas {
+        width: 100%;
+        height: auto;
+        border-radius: 16px;
+        background: #0b1c2b;
+      }
+
+      .touch-controls {
+        display: grid;
+        grid-template-columns: repeat(3, 54px);
+        grid-template-rows: repeat(3, 54px);
+        gap: 6px;
+        justify-content: center;
+        margin-top: 8px;
+      }
+
+      .touch-controls button {
+        border: none;
+        background: #f6f8ff;
+        border-radius: 14px;
+        font-size: 18px;
+        box-shadow: inset 0 0 0 2px #d4dde8;
+        cursor: pointer;
+      }
+
+      .overlay {
+        position: absolute;
+        inset: 18px;
+        background: rgba(15, 25, 35, 0.88);
+        color: #f4f7ff;
+        border-radius: 16px;
+        display: none;
+        align-items: center;
+        justify-content: center;
+        text-align: center;
+        padding: 24px;
+      }
+
+      .overlay.active {
+        display: flex;
+      }
+
+      .overlay-content {
+        max-width: 420px;
+        background: rgba(255, 255, 255, 0.08);
+        padding: 20px;
+        border-radius: 16px;
+        display: grid;
+        gap: 12px;
+      }
+
+      .overlay-content h2 {
+        margin: 0;
+        font-family: var(--font-title);
+        font-size: 24px;
+      }
+
+      .overlay-content p {
+        margin: 0;
+        font-size: 15px;
+        line-height: 1.5;
+      }
+
+      .overlay-content button {
+        border: none;
+        padding: 10px 14px;
+        border-radius: 12px;
+        background: var(--accent);
+        color: #1c1c1c;
+        font-weight: 700;
+        cursor: pointer;
+      }
+
+      .large-text {
+        font-size: 18px;
+      }
+
+      .large-text .panel,
+      .large-text button,
+      .large-text p,
+      .large-text .stat-card strong {
+        font-size: 18px;
+      }
+
+      @media (max-width: 900px) {
+        .app {
+          grid-template-columns: 1fr;
+        }
+
+        .touch-controls {
+          grid-template-columns: repeat(3, 46px);
+          grid-template-rows: repeat(3, 46px);
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="app">
+      <header>
+        <h1>Math Munchers</h1>
+        <div class="mode-pill" id="modePill">Classic</div>
+      </header>
+
+      <section class="panel">
+        <h2>Mission Control</h2>
+        <div class="stats">
+          <div class="stat-card">
+            <span>Score</span>
+            <strong id="scoreValue">0</strong>
+          </div>
+          <div class="stat-card">
+            <span>Lives / Moves</span>
+            <strong id="livesValue">3</strong>
+          </div>
+          <div class="stat-card">
+            <span>Level</span>
+            <strong id="levelValue">1</strong>
+          </div>
+          <div class="stat-card">
+            <span>Best</span>
+            <strong id="bestValue">0</strong>
+          </div>
+        </div>
+
+        <div class="rule-box">
+          <h3 id="ruleName">Rule</h3>
+          <p id="ruleDescription">Rule details appear here.</p>
+        </div>
+
+        <div class="controls">
+          <button id="startButton">Start / Resume</button>
+          <button id="restartButton" class="secondary">Restart Level</button>
+          <button id="rerollButton" class="secondary">New Rule</button>
+          <select id="modeSelect">
+            <option value="classic">Classic Mode</option>
+            <option value="puzzle">Puzzle Mode</option>
+            <option value="challenge">Challenge Mode</option>
+          </select>
+          <div class="toggle">
+            <span>Sound</span>
+            <input type="checkbox" id="soundToggle" />
+          </div>
+          <div class="toggle">
+            <span>Reduced Motion</span>
+            <input type="checkbox" id="motionToggle" />
+          </div>
+          <div class="toggle">
+            <span>Large Text</span>
+            <input type="checkbox" id="textToggle" />
+          </div>
+        </div>
+      </section>
+
+      <section class="canvas-wrap">
+        <canvas id="gameCanvas" width="900" height="640"></canvas>
+        <div class="overlay" id="overlay">
+          <div class="overlay-content">
+            <h2 id="overlayTitle">Level Complete</h2>
+            <p id="overlayBody"></p>
+            <button id="overlayButton">Next</button>
+          </div>
+        </div>
+        <div class="touch-controls">
+          <span></span>
+          <button data-dir="up">▲</button>
+          <span></span>
+          <button data-dir="left">◀</button>
+          <button data-action="eat">●</button>
+          <button data-dir="right">▶</button>
+          <span></span>
+          <button data-dir="down">▼</button>
+          <span></span>
+        </div>
+      </section>
+    </div>
+    <script src="game.js"></script>
+  </body>
+</html>
