@@ -321,24 +321,24 @@ function buildRuleFactories() {
     };
   });
 
-  factories.push((rng, difficulty) => {
-    const target = Math.floor(rng() * (difficulty.range[1] * 0.8)) + 5;
-    return {
-      id: "closest",
-      name: `Closest to ${target}`,
-      description: `Crunch the numbers with the smallest distance to ${target}.`,
-      dynamic: true,
-      target,
-      computeCorrect: (numbers) => {
-        let best = Infinity;
-        numbers.forEach((n) => {
-          best = Math.min(best, Math.abs(n - target));
-        });
-        return numbers.map((n) => Math.abs(n - target) === best);
-      },
-      explain: (n, best) => `${n} is not as close to ${target} as ${best}.`,
-    };
-  });
+  // factories.push((rng, difficulty) => {
+  //   const target = Math.floor(rng() * (difficulty.range[1] * 0.8)) + 5;
+  //   return {
+  //     id: "closest",
+  //     name: `Closest to ${target}`,
+  //     description: `Crunch the numbers with the smallest distance to ${target}.`,
+  //     dynamic: true,
+  //     target,
+  //     computeCorrect: (numbers) => {
+  //       let best = Infinity;
+  //       numbers.forEach((n) => {
+  //         best = Math.min(best, Math.abs(n - target));
+  //       });
+  //       return numbers.map((n) => Math.abs(n - target) === best);
+  //     },
+  //     explain: (n, best) => `${n} is not as close to ${target} as ${best}.`,
+  //   };
+  // });
 
   return factories;
 }
