@@ -46,8 +46,8 @@ const COLOR = {
   tile: "#0e3d63",
   tileGood: "#1f7a4f",
   tileBad: "#6a1b2a",
-  player: "#ffd166",
-  playerShadow: "#e57c3f",
+  player: "#2ecc71",
+  playerShadow: "#1a5c3a",
   enemyRandom: "#ff6b6b",
   enemyChaser: "#5f9dff",
   enemyGuard: "#9b5de5",
@@ -345,8 +345,29 @@ function buildRuleFactories() {
 
 const RULE_FACTORIES = buildRuleFactories();
 
-function pickRule(rng, difficulty) {
+function getRuleKey(rule) {
+  if (rule.param === undefined) return rule.id;
+  if (typeof rule.param === "object") {
+    return `${rule.id}-${Object.values(rule.param).join("-")}`;
+  }
+  return `${rule.id}-${rule.param}`;
+}
+
+function pickRule(rng, difficulty, usedRules = new Set()) {
   const options = [...RULE_FACTORIES];
+  shuffle(rng, options);
+
+  for (const factory of options) {
+    for (let attempt = 0; attempt < 5; attempt += 1) {
+      const rule = factory(rng, difficulty);
+      const key = getRuleKey(rule);
+      if (!usedRules.has(key)) {
+        return rule;
+      }
+    }
+  }
+
+  // Fallback: return any rule if all are used
   return pickRandom(rng, options)(rng, difficulty);
 }
 
@@ -430,7 +451,7 @@ function buildGrid(rng, rule, difficulty) {
   return { size, tiles, correctCount };
 }
 
-function createLevel(level, mode) {
+function createLevel(level, mode, usedRules = new Set()) {
   const difficulty = getDifficulty(level);
   const seed = hashSeed(`${mode}-${level}`);
   const rng = mulberry32(seed);
@@ -439,7 +460,7 @@ function createLevel(level, mode) {
   let grid = null;
 
   for (let attempt = 0; attempt < 12; attempt += 1) {
-    rule = pickRule(rng, difficulty);
+    rule = pickRule(rng, difficulty, usedRules);
     grid = buildGrid(rng, rule, difficulty);
     if (grid) break;
   }
@@ -521,7 +542,10 @@ function clearOverlay() {
 }
 
 function startLevel(level, mode, preserveScore = false) {
-  const { difficulty, rule, grid } = createLevel(level, mode);
+  const usedRules = preserveScore && game?.usedRules ? game.usedRules : new Set();
+  const { difficulty, rule, grid } = createLevel(level, mode, usedRules);
+  usedRules.add(getRuleKey(rule));
+
   const player = createPlayer(grid.size);
   const enemiesBundle =
     mode === "puzzle"
@@ -539,6 +563,7 @@ function startLevel(level, mode, preserveScore = false) {
     enemies: enemiesBundle.enemies,
     score: preserveScore ? game.score : 0,
     streak: preserveScore ? game.streak : 0,
+    usedRules,
     lives: MODES[mode].lives,
     attempts: 0,
     correct: 0,
@@ -574,8 +599,7 @@ function rerollRule() {
   let grid = null;
 
   for (let attempt = 0; attempt < 12; attempt += 1) {
-    rule = pickRule(rng, difficulty);
-    if (rule.id === game.rule.id) continue;
+    rule = pickRule(rng, difficulty, game.usedRules);
     grid = buildGrid(rng, rule, difficulty);
     if (grid) break;
   }
@@ -584,6 +608,8 @@ function rerollRule() {
     rule = pickRule(rng, difficulty);
     grid = buildGrid(rng, rule, difficulty);
   }
+
+  game.usedRules.add(getRuleKey(rule));
 
   const player = createPlayer(grid.size);
   const enemiesBundle =
@@ -897,7 +923,7 @@ function drawBoard() {
   ctx.fillStyle = COLOR.background;
   ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-  const padding = 40;
+  const padding = 30;
   const boardSize = Math.min(canvas.width, canvas.height) - padding * 2;
   const tileSize = boardSize / game.grid.size;
   const offsetX = (canvas.width - boardSize) / 2;
@@ -947,25 +973,65 @@ function drawBoard() {
 function drawPlayer(left, top, tileSize, now) {
   const centerX = left + tileSize / 2;
   const centerY = top + tileSize / 2;
-  const radius = tileSize * 0.3;
+  const bodyWidth = tileSize * 0.55;
+  const bodyHeight = tileSize * 0.5;
   const isInvulnerable = now < game.invulnerableUntil;
 
+  // Animated mouth opening (chomping)
+  const mouthOpen = game.reducedMotion ? 0.3 : 0.15 + 0.15 * Math.abs(Math.sin(now * 0.008));
+
   if (isInvulnerable) ctx.globalAlpha = 0.65;
+
+  // Shadow
   ctx.fillStyle = COLOR.playerShadow;
   ctx.beginPath();
-  ctx.arc(centerX + 4, centerY + 4, radius, 0, Math.PI * 2);
+  ctx.roundRect(centerX - bodyWidth / 2 + 3, centerY - bodyHeight / 2 + 3, bodyWidth, bodyHeight, 6);
   ctx.fill();
 
+  // Robot body
   ctx.fillStyle = COLOR.player;
   ctx.beginPath();
-  ctx.arc(centerX, centerY, radius, 0, Math.PI * 2);
+  ctx.roundRect(centerX - bodyWidth / 2, centerY - bodyHeight / 2, bodyWidth, bodyHeight, 6);
   ctx.fill();
 
-  ctx.fillStyle = "#2c1a12";
+  // Antenna
+  const antennaX = centerX;
+  const antennaBaseY = centerY - bodyHeight / 2;
+  ctx.strokeStyle = "#1a5c3a";
+  ctx.lineWidth = 2;
   ctx.beginPath();
-  ctx.arc(centerX - radius / 3, centerY - radius / 4, 3, 0, Math.PI * 2);
-  ctx.arc(centerX + radius / 4, centerY - radius / 4, 3, 0, Math.PI * 2);
+  ctx.moveTo(antennaX, antennaBaseY);
+  ctx.lineTo(antennaX, antennaBaseY - 8);
+  ctx.stroke();
+  // LED tip
+  ctx.fillStyle = "#ff4444";
+  ctx.beginPath();
+  ctx.arc(antennaX, antennaBaseY - 10, 3, 0, Math.PI * 2);
   ctx.fill();
+
+  // Eyes (white LEDs with dark pupils)
+  const eyeY = centerY - bodyHeight * 0.12;
+  const eyeSpacing = bodyWidth * 0.22;
+  ctx.fillStyle = "#ffffff";
+  ctx.beginPath();
+  ctx.arc(centerX - eyeSpacing, eyeY, 5, 0, Math.PI * 2);
+  ctx.arc(centerX + eyeSpacing, eyeY, 5, 0, Math.PI * 2);
+  ctx.fill();
+  ctx.fillStyle = "#1a1a2e";
+  ctx.beginPath();
+  ctx.arc(centerX - eyeSpacing, eyeY, 2.5, 0, Math.PI * 2);
+  ctx.arc(centerX + eyeSpacing, eyeY, 2.5, 0, Math.PI * 2);
+  ctx.fill();
+
+  // Chomping mouth
+  const mouthY = centerY + bodyHeight * 0.18;
+  const mouthWidth = bodyWidth * 0.5;
+  const mouthHeight = bodyHeight * mouthOpen;
+  ctx.fillStyle = "#1a1a2e";
+  ctx.beginPath();
+  ctx.roundRect(centerX - mouthWidth / 2, mouthY - mouthHeight / 2, mouthWidth, mouthHeight, 3);
+  ctx.fill();
+
   ctx.globalAlpha = 1;
 }
 
@@ -1125,6 +1191,7 @@ function initControls() {
     settings.reducedMotion = event.target.checked;
     saveSettings(settings);
     if (game) game.reducedMotion = settings.reducedMotion;
+    document.body.classList.toggle("reduced-motion", settings.reducedMotion);
   });
 
   textToggle.addEventListener("change", (event) => {
@@ -1154,7 +1221,7 @@ function initControls() {
 
 function resizeCanvas() {
   const width = canvas.clientWidth;
-  const height = Math.min(720, Math.max(420, width * 0.7));
+  const height = Math.min(850, Math.max(520, width * 0.8));
   canvas.width = Math.floor(width);
   canvas.height = Math.floor(height);
 }
@@ -1166,6 +1233,7 @@ function init() {
   textToggle.checked = settings.largeText;
   modeSelect.value = settings.mode;
   document.body.classList.toggle("large-text", settings.largeText);
+  document.body.classList.toggle("reduced-motion", settings.reducedMotion);
 
   initControls();
   startLevel(1, settings.mode);
