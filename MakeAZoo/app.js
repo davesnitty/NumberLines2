@@ -4,6 +4,10 @@
   const MAX_FOOD = 40;
   const STARTING_FOOD = 16;
   const FOOD_ADD_BATCH = 5;
+  const CHALLENGE_DURATION_SECONDS = 90;
+  const STARVATION_GRACE_SECONDS = 3;
+  const HIGH_HUNGER_GRACE_SECONDS = 7;
+  const CHALLENGE_LEVEL_INTERVAL = 15;
   const HUD_UPDATE_INTERVAL = 0.25;
   const AVAILABLE_BEHAVIORS = ["wander", "idle", "eat", "sleep", "social"];
 
@@ -111,6 +115,12 @@
     totalCount: document.getElementById("totalCount"),
     speciesCount: document.getElementById("speciesCount"),
     foodCount: document.getElementById("foodCount"),
+    challengeTimer: document.getElementById("challengeTimer"),
+    challengeScore: document.getElementById("challengeScore"),
+    challengeGoal: document.getElementById("challengeGoal"),
+    avgHunger: document.getElementById("avgHunger"),
+    challengeStatus: document.getElementById("challengeStatus"),
+    challengeBtn: document.getElementById("challengeBtn"),
     addFoodBtn: document.getElementById("addFoodBtn"),
     pauseBtn: document.getElementById("pauseBtn"),
     resetBtn: document.getElementById("resetBtn"),
@@ -129,6 +139,19 @@
     nextFoodId: 1,
     speedMultiplier: 1,
     enabledBehaviors: new Set(["wander"]),
+    challenge: {
+      active: false,
+      over: false,
+      won: false,
+      reason: "",
+      timeRemaining: CHALLENGE_DURATION_SECONDS,
+      starvationTime: 0,
+      highHungerTime: 0,
+      foodEaten: 0,
+      requiredEaten: 0,
+      level: 1,
+      nextLevelTime: CHALLENGE_LEVEL_INTERVAL,
+    },
     lastHudUpdate: 0,
     lastTimeMs: performance.now(),
   };
@@ -203,6 +226,141 @@
     const uniqueSpecies = new Set(zoo.animals.map((animal) => animal.speciesId));
     ui.speciesCount.textContent = String(uniqueSpecies.size);
     ui.foodCount.textContent = String(zoo.foods.length);
+    const avgHunger = zoo.animals.length
+      ? zoo.animals.reduce((sum, animal) => sum + animal.hunger, 0) / zoo.animals.length
+      : 0;
+    ui.avgHunger.textContent = String(Math.round(avgHunger));
+    ui.challengeTimer.textContent = String(Math.max(0, Math.ceil(zoo.challenge.timeRemaining)));
+    ui.challengeScore.textContent = String(zoo.challenge.foodEaten);
+    ui.challengeGoal.textContent = String(zoo.challenge.requiredEaten);
+    if (zoo.challenge.active) {
+      const starving = zoo.foods.length === 0 && zoo.animals.length > 0;
+      if (starving) {
+        const left = Math.max(0, STARVATION_GRACE_SECONDS - zoo.challenge.starvationTime);
+        ui.challengeStatus.textContent = `Level ${zoo.challenge.level}: No food (${left.toFixed(1)}s)`;
+      } else {
+        ui.challengeStatus.textContent = `Level ${zoo.challenge.level}: In Progress`;
+      }
+      ui.challengeStatus.className = "status-live";
+      ui.challengeBtn.textContent = "Restart Challenge";
+    } else if (zoo.challenge.over && zoo.challenge.won) {
+      ui.challengeStatus.textContent = "You Win";
+      ui.challengeStatus.className = "status-win";
+      ui.challengeBtn.textContent = "Play Again";
+    } else if (zoo.challenge.over && !zoo.challenge.won) {
+      ui.challengeStatus.textContent = zoo.challenge.reason || "Failed";
+      ui.challengeStatus.className = "status-fail";
+      ui.challengeBtn.textContent = "Try Again";
+    } else {
+      ui.challengeStatus.textContent = "Ready";
+      ui.challengeStatus.className = "status-ready";
+      ui.challengeBtn.textContent = "Start Challenge";
+    }
+  }
+
+  function resetChallengeState() {
+    zoo.challenge.active = false;
+    zoo.challenge.over = false;
+    zoo.challenge.won = false;
+    zoo.challenge.reason = "";
+    zoo.challenge.timeRemaining = CHALLENGE_DURATION_SECONDS;
+    zoo.challenge.starvationTime = 0;
+    zoo.challenge.highHungerTime = 0;
+    zoo.challenge.foodEaten = 0;
+    zoo.challenge.requiredEaten = Math.max(18, Math.ceil(zoo.animals.length * 2.3));
+    zoo.challenge.level = 1;
+    zoo.challenge.nextLevelTime = CHALLENGE_LEVEL_INTERVAL;
+  }
+
+  function endChallenge(won, reason = "") {
+    zoo.challenge.active = false;
+    zoo.challenge.over = true;
+    zoo.challenge.won = won;
+    zoo.challenge.reason = reason;
+    showToast(won ? "Challenge complete!" : `Challenge failed: ${reason}`);
+    updateHud();
+  }
+
+  function startChallenge() {
+    resetChallengeState();
+    if (zoo.animals.length === 0) {
+      spawnAnimal("giraffe");
+      spawnAnimal("zebra");
+      spawnAnimal("panda");
+    }
+    zoo.challenge.active = true;
+    zoo.challenge.requiredEaten = Math.max(18, Math.ceil(zoo.animals.length * 2.3));
+    if (zoo.foods.length === 0) {
+      addFoodBatch(STARTING_FOOD);
+    }
+    showToast("Challenge started: survive 90s, keep food available, hit the eat goal");
+    updateHud();
+  }
+
+  function pickRandomSpeciesId() {
+    const randomIndex = Math.floor(Math.random() * speciesCatalog.length);
+    return speciesCatalog[randomIndex].id;
+  }
+
+  function onChallengeLevelUp() {
+    if (zoo.animals.length < MAX_ANIMALS) {
+      spawnAnimal(pickRandomSpeciesId());
+    }
+    zoo.animals.forEach((animal) => {
+      animal.hunger = clamp(animal.hunger + randomInRange(5, 10), 0, 100);
+    });
+    showToast(`Level ${zoo.challenge.level}! Hunger pressure increased.`);
+  }
+
+  function updateChallengeState(dt) {
+    if (!zoo.challenge.active) {
+      return;
+    }
+
+    zoo.challenge.timeRemaining = Math.max(0, zoo.challenge.timeRemaining - dt);
+    if (zoo.challenge.timeRemaining <= 0) {
+      if (zoo.challenge.foodEaten >= zoo.challenge.requiredEaten) {
+        endChallenge(true);
+      } else {
+        endChallenge(false, "Goal not met");
+      }
+      return;
+    }
+
+    const elapsed = CHALLENGE_DURATION_SECONDS - zoo.challenge.timeRemaining;
+    while (elapsed >= zoo.challenge.nextLevelTime) {
+      zoo.challenge.level += 1;
+      zoo.challenge.nextLevelTime += CHALLENGE_LEVEL_INTERVAL;
+      onChallengeLevelUp();
+    }
+
+    const starving = zoo.foods.length === 0 && zoo.animals.length > 0;
+    if (starving) {
+      zoo.challenge.starvationTime += dt;
+      if (zoo.challenge.starvationTime >= STARVATION_GRACE_SECONDS) {
+        endChallenge(false, "No food");
+      }
+    } else {
+      zoo.challenge.starvationTime = Math.max(0, zoo.challenge.starvationTime - dt * 1.5);
+    }
+
+    const hungriest = zoo.animals.reduce((max, animal) => Math.max(max, animal.hunger), 0);
+    if (hungriest >= 100) {
+      endChallenge(false, "An animal starved");
+      return;
+    }
+
+    const avgHunger = zoo.animals.length
+      ? zoo.animals.reduce((sum, animal) => sum + animal.hunger, 0) / zoo.animals.length
+      : 0;
+    if (avgHunger >= 80) {
+      zoo.challenge.highHungerTime += dt;
+      if (zoo.challenge.highHungerTime >= HIGH_HUNGER_GRACE_SECONDS) {
+        endChallenge(false, "Hunger crisis");
+      }
+    } else {
+      zoo.challenge.highHungerTime = Math.max(0, zoo.challenge.highHungerTime - dt * 1.3);
+    }
   }
 
   function renderSidebar() {
@@ -364,6 +522,7 @@
       x: pos.x,
       y: pos.y,
       size,
+      ttl: restoreData?.ttl ?? randomInRange(16, 30),
       domEl: null,
     };
 
@@ -374,13 +533,17 @@
     return food;
   }
 
-  function removeFoodById(foodId) {
+  function removeFoodById(foodId, options = {}) {
+    const { consumed = false } = options;
     const index = zoo.foods.findIndex((food) => food.id === foodId);
     if (index < 0) {
       return false;
     }
     const [food] = zoo.foods.splice(index, 1);
     food.domEl.remove();
+    if (zoo.challenge.active && consumed) {
+      zoo.challenge.foodEaten += 1;
+    }
     updateHud();
     return true;
   }
@@ -405,6 +568,23 @@
     } else {
       showToast(`Added ${added} food`);
       saveZooState();
+    }
+  }
+
+  function updateFoodDecay(dt) {
+    if (!zoo.challenge.active) {
+      return;
+    }
+
+    const ttlDrain = 1 + (zoo.challenge.level - 1) * 0.33;
+    for (let i = zoo.foods.length - 1; i >= 0; i -= 1) {
+      const food = zoo.foods[i];
+      food.ttl -= dt * ttlDrain;
+      const freshness = clamp(food.ttl / 30, 0.72, 1);
+      food.domEl.style.opacity = freshness.toFixed(2);
+      if (food.ttl <= 0) {
+        removeFoodById(food.id);
+      }
     }
   }
 
@@ -460,6 +640,7 @@
       movementProfile: species.movementProfile || "ground",
       state,
       stateTimeRemaining: restoreData?.stateTimeRemaining ?? randomStateDuration(state),
+      hunger: clamp(Number(restoreData?.hunger ?? randomInRange(18, 42)), 0, 100),
       targetId: null,
       foodTargetId: null,
       bobPhase: Math.random() * Math.PI * 2,
@@ -595,10 +776,11 @@
 
         const eatReach = animal.size * (isBird ? 0.2 : 0.24) + foodTarget.size;
         if (distance <= eatReach) {
-          if (removeFoodById(foodTarget.id)) {
+          if (removeFoodById(foodTarget.id, { consumed: true })) {
             animal.foodTargetId = null;
             animal.vx *= 0.72;
             animal.vy *= 0.72;
+            animal.hunger = clamp(animal.hunger - (isBird ? 34 : 42), 0, 100);
             animal.stateTimeRemaining = Math.max(animal.stateTimeRemaining, 0.55);
           }
         }
@@ -670,6 +852,22 @@
   }
 
   function updateAnimal(animal, dt) {
+    const challengeMultiplier = zoo.challenge.active ? 1 + (zoo.challenge.level - 1) * 0.18 : 0.55;
+    let hungerRate = (animal.movementProfile === "air" ? 2.6 : 2.1) * challengeMultiplier;
+    if (animal.state === "sleep") {
+      hungerRate *= 0.45;
+    } else if (animal.state === "idle") {
+      hungerRate *= 0.62;
+    } else if (animal.state === "social") {
+      hungerRate *= 1.12;
+    }
+    animal.hunger = clamp(animal.hunger + hungerRate * dt, 0, 100);
+
+    if (zoo.challenge.active && animal.hunger >= 72 && zoo.foods.length > 0 && animal.state !== "eat") {
+      animal.state = "eat";
+      animal.stateTimeRemaining = Math.max(animal.stateTimeRemaining, 1.5);
+    }
+
     animal.stateTimeRemaining -= dt;
     if (animal.stateTimeRemaining <= 0 || !zoo.enabledBehaviors.has(animal.state)) {
       transitionAnimalState(animal);
@@ -701,6 +899,7 @@
     animal.domEl.style.transform = `translate(${animal.x}px, ${animal.y + bob + hover}px) scaleX(${facing})`;
     animal.domEl.classList.toggle("eat", animal.state === "eat");
     animal.domEl.classList.toggle("sleep", animal.state === "sleep");
+    animal.domEl.classList.toggle("hungry", animal.hunger >= 70);
     animal.domEl.setAttribute("aria-label", `${animal.species.name} in ${animal.state} state`);
   }
 
@@ -710,12 +909,14 @@
         speciesId: animal.speciesId,
         x: animal.x,
         y: animal.y,
+        hunger: animal.hunger,
         state: animal.state,
         stateTimeRemaining: clamp(animal.stateTimeRemaining, 0.2, 8),
       })),
       foods: zoo.foods.map((food) => ({
         x: food.x,
         y: food.y,
+        ttl: food.ttl,
       })),
       speedMultiplier: zoo.speedMultiplier,
       enabledBehaviors: Array.from(zoo.enabledBehaviors),
@@ -768,6 +969,7 @@
           spawnAnimal(item.speciesId, {
             x: item.x,
             y: item.y,
+            hunger: item.hunger,
             state: item.state,
             stateTimeRemaining: item.stateTimeRemaining,
           });
@@ -795,11 +997,17 @@
     ui.resetBtn.addEventListener("click", () => {
       removeAllAnimals();
       removeAllFood();
+      resetChallengeState();
       for (let i = 0; i < STARTING_FOOD; i += 1) {
         spawnFood();
       }
       clearSavedState();
       showToast("Zoo reset");
+      updateHud();
+    });
+
+    ui.challengeBtn.addEventListener("click", () => {
+      startChallenge();
     });
 
     ui.addFoodBtn.addEventListener("click", () => {
@@ -818,10 +1026,14 @@
     zoo.lastTimeMs = nowMs;
 
     if (!zoo.paused) {
+      updateFoodDecay(dt);
+
       for (const animal of zoo.animals) {
         updateAnimal(animal, dt);
         renderAnimal(animal);
       }
+
+      updateChallengeState(dt);
 
       zoo.lastHudUpdate += dt;
       if (zoo.lastHudUpdate >= HUD_UPDATE_INTERVAL) {
@@ -843,6 +1055,10 @@
         event.preventDefault();
         ui.resetBtn.click();
       }
+      if (event.key.toLowerCase() === "c") {
+        event.preventDefault();
+        ui.challengeBtn.click();
+      }
     });
   }
 
@@ -851,6 +1067,7 @@
     renderBehaviorToggles();
     handleControls();
     addKeyboardSupport();
+    resetChallengeState();
     loadZooState();
     if (zoo.foods.length === 0) {
       for (let i = 0; i < STARTING_FOOD; i += 1) {

@@ -11,7 +11,7 @@
       <aside class="sidebar" aria-label="Animal selector">
         <div class="sidebar-header">
           <h1>Make a Zoo</h1>
-          <p>Choose animals to add them to your zoo.</p>
+          <p>Survive the challenge: keep your animals fed and do not fail.</p>
         </div>
         <div id="animalList" class="animal-list" role="list"></div>
       </aside>
@@ -22,6 +22,11 @@
             <div class="stat-pill">Total Animals: <span id="totalCount">0</span></div>
             <div class="stat-pill">Species: <span id="speciesCount">0</span></div>
             <div class="stat-pill">Food: <span id="foodCount">0</span></div>
+            <div class="stat-pill">Time: <span id="challengeTimer">90</span>s</div>
+            <div class="stat-pill">Eaten: <span id="challengeScore">0</span></div>
+            <div class="stat-pill">Goal: <span id="challengeGoal">0</span></div>
+            <div class="stat-pill">Avg Hunger: <span id="avgHunger">0</span></div>
+            <div class="stat-pill">Status: <span id="challengeStatus">Ready</span></div>
           </div>
           <div class="hud-group">
             <label class="slider-wrap" for="speedControl">
@@ -32,6 +37,7 @@
               <span class="behavior-toggles-label">Behaviors</span>
               <div id="behaviorToggles" class="behavior-toggles"></div>
             </div>
+            <button id="challengeBtn" type="button">Start Challenge</button>
             <button id="addFoodBtn" type="button">Add Food</button>
             <button id="pauseBtn" type="button">Pause</button>
             <button id="resetBtn" type="button" class="danger">Reset Zoo</button>

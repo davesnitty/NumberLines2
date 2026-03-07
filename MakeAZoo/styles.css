@@ -129,6 +129,26 @@ input {
   font-size: 0.9rem;
 }
 
+#challengeStatus.status-ready {
+  color: #624d2c;
+  font-weight: 700;
+}
+
+#challengeStatus.status-live {
+  color: #1c6e47;
+  font-weight: 700;
+}
+
+#challengeStatus.status-win {
+  color: #0f7a50;
+  font-weight: 800;
+}
+
+#challengeStatus.status-fail {
+  color: #9e2f23;
+  font-weight: 800;
+}
+
 button {
   border: 1px solid var(--accent-deep);
   border-radius: 8px;
@@ -235,9 +255,9 @@ button.danger:focus-visible {
   height: 14px;
   border-radius: 50%;
   background:
-    radial-gradient(circle at 30% 30%, #fff4bd 0 22%, transparent 24%),
-    radial-gradient(circle at 60% 65%, #d68540 0 45%, #9a5323 70%);
-  box-shadow: 0 2px 3px rgba(62, 44, 20, 0.3);
+    radial-gradient(circle at 30% 30%, #fff9d6 0 24%, transparent 26%),
+    radial-gradient(circle at 60% 65%, #f6ae52 0 48%, #bc662c 72%);
+  box-shadow: 0 2px 4px rgba(62, 44, 20, 0.28);
 }
 
 .animal {
@@ -265,6 +285,10 @@ button.danger:focus-visible {
 
 .animal.sleep img {
   filter: drop-shadow(0 4px 4px rgba(0, 0, 0, 0.2)) saturate(0.75) brightness(0.92);
+}
+
+.animal.hungry img {
+  filter: drop-shadow(0 4px 5px rgba(0, 0, 0, 0.25)) saturate(1.18) contrast(1.08);
 }
 
 .toast {
