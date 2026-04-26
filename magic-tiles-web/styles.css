@@ -1,0 +1,120 @@
+:root {
+  color-scheme: dark;
+  --bg: #080914;
+  --panel: #12142a;
+  --text: #f2f4ff;
+  --muted: #a8add8;
+  --accent: #08e8ff;
+  --accent-2: #ff3cf7;
+  --good: #36fba8;
+  --miss: #ff5f7d;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+  background: radial-gradient(circle at 50% -10%, #202248 0%, var(--bg) 55%);
+  color: var(--text);
+  font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+  min-height: 100%;
+}
+
+.app {
+  width: min(980px, 100vw);
+  margin: 0 auto;
+  padding: 16px;
+  display: grid;
+  gap: 12px;
+}
+
+.topbar h1 {
+  margin: 0 0 4px;
+  letter-spacing: 0.4px;
+}
+
+.tagline {
+  margin: 0;
+  color: var(--muted);
+}
+
+.controls {
+  background: color-mix(in oklab, var(--panel), black 8%);
+  border: 1px solid color-mix(in oklab, var(--accent), transparent 70%);
+  border-radius: 12px;
+  padding: 10px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  align-items: center;
+}
+
+.controls label {
+  font-size: 0.88rem;
+  color: var(--muted);
+}
+
+.controls select,
+.controls button {
+  height: 36px;
+  border-radius: 8px;
+  border: 1px solid #2d3368;
+  background: #171a33;
+  color: var(--text);
+  padding: 0 10px;
+  font-size: 0.95rem;
+}
+
+.controls button {
+  cursor: pointer;
+}
+
+.controls button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.hud {
+  display: grid;
+  grid-template-columns: repeat(6, minmax(0, 1fr));
+  gap: 8px;
+}
+
+.hud > div {
+  background: color-mix(in oklab, var(--panel), black 8%);
+  border: 1px solid #2d3368;
+  border-radius: 8px;
+  padding: 8px;
+  text-align: center;
+}
+
+.game-wrap {
+  border-radius: 14px;
+  overflow: hidden;
+  border: 1px solid color-mix(in oklab, var(--accent), transparent 65%);
+  box-shadow: 0 0 40px color-mix(in oklab, var(--accent), transparent 75%);
+  touch-action: none;
+  width: min(100%, 480px);
+}
+
+#gameCanvas {
+  width: 100%;
+  height: auto;
+  display: block;
+  background: linear-gradient(to bottom, #0f132e, #060710);
+}
+
+.help {
+  color: var(--muted);
+  font-size: 0.94rem;
+}
+
+@media (max-width: 700px) {
+  .hud {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}

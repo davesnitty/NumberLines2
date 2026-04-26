@@ -1,0 +1,57 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <title>MusicLanes</title>
+    <meta
+      name="description"
+      content="MusicLanes is a client-side rhythm game inspired by piano tile style gameplay."
+    />
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <main class="app">
+      <header class="topbar">
+        <h1>MusicLanes</h1>
+        <p class="tagline">Neon piano-tile rhythm game. Mouse, touch, or keyboard (D F J K).</p>
+      </header>
+
+      <section class="controls">
+        <label for="songSelect">Song</label>
+        <select id="songSelect" aria-label="Choose song"></select>
+
+        <label for="difficultySelect">Difficulty</label>
+        <select id="difficultySelect" aria-label="Choose difficulty">
+          <option value="easy">Easy</option>
+          <option value="normal">Normal</option>
+          <option value="hard">Hard</option>
+        </select>
+
+        <button id="startBtn" type="button">Start</button>
+        <button id="pauseBtn" type="button" disabled>Pause</button>
+        <button id="audioTestBtn" type="button">Enable/Test Audio</button>
+      </section>
+
+      <section class="hud" aria-live="polite">
+        <div>Score: <span id="scoreValue">0</span></div>
+        <div>Combo: <span id="comboValue">0</span></div>
+        <div>Best: <span id="bestValue">0</span></div>
+        <div>Health: <span id="healthValue">100</span></div>
+        <div>Status: <span id="statusValue">Ready</span></div>
+        <div>Audio: <span id="audioStateValue">unknown</span></div>
+      </section>
+
+      <section class="game-wrap">
+        <canvas id="gameCanvas" width="420" height="760" aria-label="MusicLanes game area"></canvas>
+      </section>
+
+      <section class="help">
+        <p><strong>How to play:</strong> Hit notes when they reach the neon hit line. Keep the combo alive.</p>
+      </section>
+    </main>
+
+    <script src="./audio.js"></script>
+    <script src="./game.js"></script>
+  </body>
+</html>
