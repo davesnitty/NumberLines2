@@ -179,8 +179,7 @@ main {
     radial-gradient(circle at 60% 12%, white 1px, transparent 2px),
     radial-gradient(circle at 80% 35%, white 1px, transparent 2px),
     radial-gradient(circle at 35% 55%, white 1px, transparent 2px),
-    radial-gradient(circle at 90% 70%, white 1px, transparent 2px),
-    linear-gradient(to bottom, #0a0a2e 0%, #1a1850 70%, #6e6e7a 70%, #4a4a55 100%);
+    linear-gradient(to bottom, #0a0a2e 0%, #1a1850 65%, #6e6e7a 65%, #4a4a55 100%);
 }
 .panel.other[data-env="saturn"] .stage {
   background:
@@ -193,39 +192,67 @@ main {
 .panel.other[data-env="mercury"] .stage {
   background:
     radial-gradient(circle at 80% 18%, #fff4c2 0 22px, #ffd76a 22px 26px, transparent 27px),
-    radial-gradient(circle at 30% 60%, rgba(0,0,0,0.15) 0 6px, transparent 7px),
-    radial-gradient(circle at 55% 75%, rgba(0,0,0,0.18) 0 4px, transparent 5px),
-    radial-gradient(circle at 70% 85%, rgba(0,0,0,0.15) 0 5px, transparent 6px),
+    radial-gradient(circle at 30% 80%, rgba(0,0,0,0.18) 0 6px, transparent 7px),
+    radial-gradient(circle at 55% 88%, rgba(0,0,0,0.18) 0 4px, transparent 5px),
+    radial-gradient(circle at 70% 92%, rgba(0,0,0,0.15) 0 5px, transparent 6px),
     linear-gradient(to bottom,
-      #1a1020 0%, #3a2a30 50%,
-      #a08070 50%, #6a4a3a 100%);
+      #1a1020 0%, #3a2a30 65%,
+      #a08070 65%, #6a4a3a 100%);
 }
 .panel.other[data-env="jupiter"] .stage {
   background:
     radial-gradient(ellipse 60px 20px at 30% 35%, #c84a3a 0%, transparent 70%),
-    repeating-linear-gradient(to bottom,
-      #f0d8a8 0px, #f0d8a8 18px,
-      #c89868 18px, #c89868 30px,
-      #a87858 30px, #a87858 42px,
-      #d8b078 42px, #d8b078 56px,
-      #b88858 56px, #b88858 68px),
-    linear-gradient(to bottom, #f0d8a8, #8a5a2a);
+    linear-gradient(to bottom,
+      #f0d8a8 0%, #f0d8a8 10%,
+      #c89868 10%, #c89868 20%,
+      #a87858 20%, #a87858 30%,
+      #d8b078 30%, #d8b078 42%,
+      #b88858 42%, #b88858 55%,
+      #e8c898 55%, #e8c898 65%,
+      #6a4a2a 65%, #4a3018 100%);
+}
+.panel.other[data-env="mars"] .stage {
+  background:
+    radial-gradient(circle at 78% 20%, #ffe4a0 0 14px, transparent 15px),
+    radial-gradient(circle at 22% 78%, rgba(0,0,0,0.18) 0 5px, transparent 6px),
+    radial-gradient(circle at 60% 85%, rgba(0,0,0,0.18) 0 4px, transparent 5px),
+    linear-gradient(to bottom,
+      #f7c8a0 0%, #e89868 35%, #c86838 65%,
+      #8a3818 65%, #5a2010 100%);
+}
+.panel.other[data-env="pluto"] .stage {
+  background:
+    radial-gradient(circle at 15% 20%, white 1px, transparent 2px),
+    radial-gradient(circle at 45% 12%, white 1.2px, transparent 2px),
+    radial-gradient(circle at 70% 28%, white 1px, transparent 2px),
+    radial-gradient(circle at 88% 18%, white 1.4px, transparent 2px),
+    radial-gradient(circle at 30% 45%, white 1px, transparent 2px),
+    radial-gradient(ellipse 70px 30px at 35% 80%, #fff8e8 0%, transparent 70%),
+    linear-gradient(to bottom,
+      #1a1430 0%, #2a2548 60%, #4a4060 65%,
+      #c8b8a8 65%, #d8c8b0 80%, #b8a890 100%);
 }
 .panel.other[data-env="uranus"] .stage {
   background:
     radial-gradient(circle at 75% 25%, rgba(255,255,255,0.15) 0 40px, transparent 60px),
     linear-gradient(to bottom,
       #b8f0ec 0%, #7ad8d4 40%, #4ab8b8 65%,
-      #3a8a9a 65%, #1a4a5a 100%);
+      #2a6878 65%, #1a4a5a 100%);
 }
 .panel.other[data-env="mercury"] .figure .kid,
 .panel.other[data-env="jupiter"] .figure .kid,
+.panel.other[data-env="mars"]    .figure .kid,
+.panel.other[data-env="pluto"]   .figure .kid,
 .panel.other[data-env="uranus"]  .figure .kid { stroke: #1a1033; }
 .panel.other[data-env="mercury"] .figure .head { fill: #ffd6a5; stroke: #1a1033; }
 .panel.other[data-env="jupiter"] .figure .head { fill: #ffe0b0; stroke: #1a1033; }
+.panel.other[data-env="mars"]    .figure .head { fill: #ffd6a5; stroke: #1a1033; }
+.panel.other[data-env="pluto"]   .figure .head { fill: #e0f8ff; stroke: #1a1033; }
 .panel.other[data-env="uranus"]  .figure .head { fill: #e0f8ff; stroke: #1a1033; }
 .panel.other[data-env="mercury"] .ruler,
 .panel.other[data-env="jupiter"] .ruler,
+.panel.other[data-env="mars"]    .ruler,
+.panel.other[data-env="pluto"]   .ruler,
 .panel.other[data-env="uranus"]  .ruler { color: rgba(0,0,0,0.6); }
 
 .ground {
@@ -233,6 +260,12 @@ main {
   left: 0; right: 0; bottom: 0;
   height: 35%;
   pointer-events: none;
+  border-top: 2px solid rgba(0, 0, 0, 0.45);
+  box-shadow: 0 -1px 0 rgba(255, 255, 255, 0.25);
+}
+.panel.other[data-env="moon"] .ground {
+  border-top-color: rgba(255, 255, 255, 0.55);
+  box-shadow: 0 -1px 0 rgba(0, 0, 0, 0.4);
 }
 .figure {
   position: absolute;
@@ -255,6 +288,65 @@ main {
 .panel.earth .figure .head { fill: #ffd6a5; stroke: #1a1033; }
 .panel.other[data-env="moon"] .figure .kid { stroke: #fff; }
 .panel.other[data-env="moon"] .figure .head { fill: #ffe; stroke: #fff; }
+
+/* Space suit (always shown on right-side astronaut figure) */
+.figure.astronaut .kid .head,
+.figure.astronaut .kid .body,
+.figure.astronaut .kid .arm-l,
+.figure.astronaut .kid .arm-r,
+.figure.astronaut .kid .leg-l,
+.figure.astronaut .kid .leg-r {
+  stroke: #d8d8e0 !important;
+  stroke-width: 5;
+}
+.figure.astronaut .kid .head { fill: #ffd6a5 !important; }
+.figure.astronaut .suit-pack {
+  fill: #c8c8d0;
+  stroke: #555;
+  stroke-width: 1;
+}
+.figure.astronaut .suit-antenna {
+  stroke: #888;
+  stroke-width: 1;
+  fill: none;
+}
+.figure.astronaut .suit-antenna-tip {
+  fill: #ff3d8a;
+  stroke: none;
+}
+.figure.astronaut .suit-torso {
+  fill: #f4f4f8;
+  stroke: #555;
+  stroke-width: 1;
+}
+.figure.astronaut .suit-chest {
+  fill: #2a2a3a;
+  stroke: #555;
+  stroke-width: 0.5;
+}
+.figure.astronaut .suit-chest-led {
+  fill: #4ad7ff;
+  stroke: none;
+}
+.figure.astronaut .suit-helmet {
+  fill: rgba(180, 220, 255, 0.25);
+  stroke: #ddd;
+  stroke-width: 1.5;
+}
+.figure.astronaut .suit-visor {
+  fill: #2a2a4a;
+  stroke: #ffd23f;
+  stroke-width: 1;
+}
+.figure.astronaut .suit-visor-shine {
+  fill: rgba(255, 255, 255, 0.6);
+  stroke: none;
+}
+.figure.astronaut .suit-boot {
+  fill: #d8d8e0;
+  stroke: #333;
+  stroke-width: 1;
+}
 .panel.other[data-env="saturn"] .figure .kid { stroke: #2a1a05; }
 .panel.other[data-env="saturn"] .figure .head { fill: #ffe0b0; stroke: #2a1a05; }
 

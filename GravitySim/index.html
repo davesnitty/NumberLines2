@@ -55,9 +55,11 @@
         <select id="env-select">
           <option value="moon" selected>Moon</option>
           <option value="mercury">Mercury</option>
+          <option value="mars">Mars</option>
           <option value="saturn">Saturn</option>
           <option value="jupiter">Jupiter</option>
           <option value="uranus">Uranus</option>
+          <option value="pluto">Pluto</option>
         </select>
       </h2>
       <div class="g-tag">g = <span data-bind="g">1.62</span> m/s²</div>
@@ -65,14 +67,35 @@
     <div class="stage" id="stage-R">
       <div class="ruler" data-bind="ruler"></div>
       <div class="ground"></div>
-      <svg class="figure" viewBox="-20 -60 40 60" preserveAspectRatio="xMidYEnd meet">
+      <svg class="figure astronaut" viewBox="-20 -60 40 60" preserveAspectRatio="xMidYEnd meet">
         <g class="kid">
+          <!-- backpack (PLSS) -->
+          <rect class="suit-pack" x="-7" y="-42" width="14" height="20" rx="2"/>
+          <!-- antenna -->
+          <line class="suit-antenna" x1="-4" y1="-58" x2="-4" y2="-63"/>
+          <circle class="suit-antenna-tip" cx="-4" cy="-64" r="0.9"/>
+          <!-- suit body (thick white torso) -->
+          <rect class="suit-torso" x="-6" y="-42" width="12" height="22" rx="3"/>
+          <!-- chest control panel -->
+          <rect class="suit-chest" x="-3.5" y="-36" width="7" height="5" rx="0.8"/>
+          <circle class="suit-chest-led" cx="-2" cy="-33.5" r="0.6"/>
+          <circle class="suit-chest-led" cx="2"  cy="-33.5" r="0.6"/>
+          <!-- helmet bubble -->
+          <circle class="suit-helmet" cx="0" cy="-50" r="9"/>
+          <!-- visor -->
+          <path class="suit-visor" d="M -6.5,-50 A 6.5,6.5 0 0,1 6.5,-50 Z"/>
+          <!-- visor highlight -->
+          <ellipse class="suit-visor-shine" cx="-2.5" cy="-52" rx="2" ry="1"/>
+          <!-- head (kept for crouch/animation parity, hidden behind helmet) -->
           <circle cx="0" cy="-50" r="7" class="head"/>
           <line x1="0" y1="-43" x2="0" y2="-20" class="body"/>
           <line class="arm-l" x1="0" y1="-38" x2="-10" y2="-28"/>
           <line class="arm-r" x1="0" y1="-38" x2="10"  y2="-28"/>
           <line class="leg-l" x1="0" y1="-20" x2="-7"  y2="0"/>
           <line class="leg-r" x1="0" y1="-20" x2="7"   y2="0"/>
+          <!-- boots -->
+          <rect class="suit-boot" x="-9" y="-2" width="6" height="4" rx="1"/>
+          <rect class="suit-boot" x="3"  y="-2" width="6" height="4" rx="1"/>
         </g>
       </svg>
     </div>

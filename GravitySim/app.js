@@ -8,10 +8,14 @@ const IN_PER_M = 39.3701;
 const G_JUPITER = 24.79;
 const G_MERCURY = 3.70;
 const G_URANUS  = 8.87;
+const G_MARS    = 3.72;
+const G_PLUTO   = 0.62;
 
 const ENVS = {
+  pluto:   { name: "Pluto",   emoji: "❄️", g: G_PLUTO },
   moon:    { name: "Moon",    emoji: "🌕", g: G_MOON },
   mercury: { name: "Mercury", emoji: "☿️", g: G_MERCURY },
+  mars:    { name: "Mars",    emoji: "🔴", g: G_MARS },
   saturn:  { name: "Saturn",  emoji: "🪐", g: G_SATURN },
   jupiter: { name: "Jupiter", emoji: "🟠", g: G_JUPITER },
   uranus:  { name: "Uranus",  emoji: "🔵", g: G_URANUS },
