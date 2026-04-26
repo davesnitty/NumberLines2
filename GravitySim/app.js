@@ -175,7 +175,8 @@ function updateFacts() {
     const m = els.math[side];
     m.querySelector('[data-f="v0"]').textContent = fmt(v0, "m/s");
     m.querySelector('[data-f="tapex"]').textContent = fmt(tapex, "s", 3);
-    m.querySelector('[data-f="hmax"]').textContent = fmt(hmax, "m");
+    m.querySelector('[data-f="hmax"]').textContent =
+      `${fmt(hmax, "m")} (${(hmax * IN_PER_M).toFixed(1)} in)`;
     m.querySelector('[data-f="ttotal"]').textContent = fmt(ttotal, "s", 3);
   }
 }
