@@ -10,15 +10,21 @@ const G_MERCURY = 3.70;
 const G_URANUS  = 8.87;
 const G_MARS    = 3.72;
 const G_PLUTO   = 0.62;
+const G_VENUS   = 8.87;
+const G_ACEN    = 199.5; // Alpha Centauri A surface (sun-like star)
+const G_CALLISTO = 1.235; // Jupiter's moon
 
 const ENVS = {
-  pluto:   { name: "Pluto",   emoji: "❄️", g: G_PLUTO },
-  moon:    { name: "Moon",    emoji: "🌕", g: G_MOON },
+  pluto:    { name: "Pluto",    emoji: "❄️", g: G_PLUTO },
+  callisto: { name: "Callisto", emoji: "🌑", g: G_CALLISTO },
+  moon:     { name: "Moon",     emoji: "🌕", g: G_MOON },
   mercury: { name: "Mercury", emoji: "☿️", g: G_MERCURY },
   mars:    { name: "Mars",    emoji: "🔴", g: G_MARS },
+  venus:   { name: "Venus",   emoji: "🟡", g: G_VENUS },
+  uranus:  { name: "Uranus",  emoji: "🔵", g: G_URANUS },
   saturn:  { name: "Saturn",  emoji: "🪐", g: G_SATURN },
   jupiter: { name: "Jupiter", emoji: "🟠", g: G_JUPITER },
-  uranus:  { name: "Uranus",  emoji: "🔵", g: G_URANUS },
+  acen:    { name: "Alpha Centauri A", emoji: "⭐", g: G_ACEN },
 };
 
 // Pick a fixed scale (px per meter) so even a big Moon jump fits the stage.

@@ -232,6 +232,46 @@ main {
       #1a1430 0%, #2a2548 60%, #4a4060 65%,
       #c8b8a8 65%, #d8c8b0 80%, #b8a890 100%);
 }
+.panel.other[data-env="callisto"] .stage {
+  background:
+    radial-gradient(ellipse 35px 6px at 78% 22%, rgba(200,140,90,0.5), transparent 70%),
+    radial-gradient(circle at 78% 22%, #d8a070 0 32px, #a86838 32px 34px, transparent 35px),
+    radial-gradient(circle at 15% 18%, white 1px, transparent 2px),
+    radial-gradient(circle at 40% 10%, white 1px, transparent 2px),
+    radial-gradient(circle at 92% 50%, white 1.2px, transparent 2px),
+    radial-gradient(circle at 55% 30%, white 1px, transparent 2px),
+    radial-gradient(circle at 25% 80%, rgba(255,255,255,0.6) 0 4px, transparent 6px),
+    radial-gradient(circle at 60% 88%, rgba(255,255,255,0.5) 0 6px, transparent 8px),
+    radial-gradient(circle at 80% 78%, rgba(0,0,0,0.25) 0 5px, transparent 7px),
+    radial-gradient(circle at 35% 92%, rgba(0,0,0,0.2) 0 4px, transparent 6px),
+    linear-gradient(to bottom,
+      #0a0a1a 0%, #1a1a2e 65%,
+      #6a5a4e 65%, #4a3a30 100%);
+}
+.panel.other[data-env="venus"] .stage {
+  background:
+    radial-gradient(ellipse 80px 22px at 25% 22%, rgba(255,240,180,0.7), transparent 70%),
+    radial-gradient(ellipse 100px 18px at 65% 38%, rgba(255,210,140,0.6), transparent 70%),
+    radial-gradient(ellipse 70px 16px at 40% 52%, rgba(255,180,100,0.5), transparent 70%),
+    linear-gradient(to bottom,
+      #fff2b0 0%, #ffd870 30%, #f0a040 55%, #d87830 65%,
+      #6a2818 65%, #3a1208 100%);
+}
+.panel.other[data-env="acen"] .stage {
+  background:
+    radial-gradient(circle at 50% 45%, rgba(255,250,200,0.9) 0 30px, rgba(255,200,80,0.5) 60px, transparent 120px),
+    radial-gradient(ellipse 40px 8px at 25% 50%, rgba(255,150,50,0.6), transparent 70%),
+    radial-gradient(ellipse 30px 6px at 75% 60%, rgba(255,200,80,0.7), transparent 70%),
+    radial-gradient(ellipse 50px 10px at 60% 75%, rgba(255,100,30,0.5), transparent 70%),
+    linear-gradient(to bottom,
+      #fff8c8 0%, #ffd860 25%, #ff9830 50%, #e8501a 65%,
+      #c83008 65%, #6a1004 100%);
+  animation: starflicker 3s ease-in-out infinite;
+}
+@keyframes starflicker {
+  0%, 100% { filter: brightness(1); }
+  50%      { filter: brightness(1.08); }
+}
 .panel.other[data-env="uranus"] .stage {
   background:
     radial-gradient(circle at 75% 25%, rgba(255,255,255,0.15) 0 40px, transparent 60px),
@@ -243,16 +283,24 @@ main {
 .panel.other[data-env="jupiter"] .figure .kid,
 .panel.other[data-env="mars"]    .figure .kid,
 .panel.other[data-env="pluto"]   .figure .kid,
+.panel.other[data-env="venus"]   .figure .kid,
+.panel.other[data-env="acen"]    .figure .kid,
+.panel.other[data-env="callisto"] .figure .kid,
 .panel.other[data-env="uranus"]  .figure .kid { stroke: #1a1033; }
 .panel.other[data-env="mercury"] .figure .head { fill: #ffd6a5; stroke: #1a1033; }
 .panel.other[data-env="jupiter"] .figure .head { fill: #ffe0b0; stroke: #1a1033; }
 .panel.other[data-env="mars"]    .figure .head { fill: #ffd6a5; stroke: #1a1033; }
 .panel.other[data-env="pluto"]   .figure .head { fill: #e0f8ff; stroke: #1a1033; }
+.panel.other[data-env="venus"]   .figure .head { fill: #ffe0b0; stroke: #1a1033; }
+.panel.other[data-env="acen"]    .figure .head { fill: #ffd6a5; stroke: #1a1033; }
+.panel.other[data-env="callisto"] .figure .head { fill: #ffd6a5; stroke: #1a1033; }
 .panel.other[data-env="uranus"]  .figure .head { fill: #e0f8ff; stroke: #1a1033; }
 .panel.other[data-env="mercury"] .ruler,
 .panel.other[data-env="jupiter"] .ruler,
 .panel.other[data-env="mars"]    .ruler,
 .panel.other[data-env="pluto"]   .ruler,
+.panel.other[data-env="venus"]   .ruler,
+.panel.other[data-env="acen"]    .ruler,
 .panel.other[data-env="uranus"]  .ruler { color: rgba(0,0,0,0.6); }
 
 .ground {
@@ -360,7 +408,8 @@ main {
   font-size: 10px;
   color: rgba(0,0,0,0.55);
 }
-.panel.other[data-env="moon"] .ruler { color: rgba(255,255,255,0.7); }
+.panel.other[data-env="moon"] .ruler,
+.panel.other[data-env="callisto"] .ruler { color: rgba(255,255,255,0.7); }
 .ruler .tick {
   position: absolute;
   left: 0;
