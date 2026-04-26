@@ -1,0 +1,89 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Gravity Jump Lab</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@400;500;600;700&family=JetBrains+Mono:wght@500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<header>
+  <h1>Gravity Jump Lab <span class="zoom">🚀</span></h1>
+  <div class="controls">
+    <label>My vertical leap on Earth:
+      <input id="leap-in" type="number" min="1" max="60" step="0.5" value="20"> in
+    </label>
+    <button id="jump-btn" type="button">JUMP! <span class="kbd">space</span></button>
+    <span id="status" class="status">Ready.</span>
+  </div>
+  <div class="scrub">
+    <label for="scrub">Scrub through the jump:</label>
+    <input id="scrub" type="range" min="0" max="1" step="0.001" value="0">
+    <span id="scrub-time" class="scrub-time">t = 0.000 s</span>
+  </div>
+</header>
+
+<main>
+  <section class="panel earth" data-side="L">
+    <div class="panel-head">
+      <h2>🌎 Earth</h2>
+      <div class="g-tag">g = <span data-bind="g">9.80</span> m/s²</div>
+    </div>
+    <div class="stage" id="stage-L">
+      <div class="ruler" data-bind="ruler"></div>
+      <div class="ground"></div>
+      <svg class="figure" viewBox="-20 -60 40 60" preserveAspectRatio="xMidYEnd meet">
+        <g class="kid">
+          <circle cx="0" cy="-50" r="7" class="head"/>
+          <line x1="0" y1="-43" x2="0" y2="-20" class="body"/>
+          <line class="arm-l" x1="0" y1="-38" x2="-10" y2="-28"/>
+          <line class="arm-r" x1="0" y1="-38" x2="10"  y2="-28"/>
+          <line class="leg-l" x1="0" y1="-20" x2="-7"  y2="0"/>
+          <line class="leg-r" x1="0" y1="-20" x2="7"   y2="0"/>
+        </g>
+      </svg>
+    </div>
+    <div class="math" id="math-L"></div>
+  </section>
+
+  <section class="panel other" data-side="R">
+    <div class="panel-head">
+      <h2><span data-bind="emoji">🌕</span> <span data-bind="name">Moon</span>
+        <select id="env-select">
+          <option value="moon" selected>Moon</option>
+          <option value="mercury">Mercury</option>
+          <option value="saturn">Saturn</option>
+          <option value="jupiter">Jupiter</option>
+          <option value="uranus">Uranus</option>
+        </select>
+      </h2>
+      <div class="g-tag">g = <span data-bind="g">1.62</span> m/s²</div>
+    </div>
+    <div class="stage" id="stage-R">
+      <div class="ruler" data-bind="ruler"></div>
+      <div class="ground"></div>
+      <svg class="figure" viewBox="-20 -60 40 60" preserveAspectRatio="xMidYEnd meet">
+        <g class="kid">
+          <circle cx="0" cy="-50" r="7" class="head"/>
+          <line x1="0" y1="-43" x2="0" y2="-20" class="body"/>
+          <line class="arm-l" x1="0" y1="-38" x2="-10" y2="-28"/>
+          <line class="arm-r" x1="0" y1="-38" x2="10"  y2="-28"/>
+          <line class="leg-l" x1="0" y1="-20" x2="-7"  y2="0"/>
+          <line class="leg-r" x1="0" y1="-20" x2="7"   y2="0"/>
+        </g>
+      </svg>
+    </div>
+    <div class="math" id="math-R"></div>
+  </section>
+</main>
+
+<footer>
+  <p>Same legs, different planet. Your takeoff speed v₀ is set by your Earth leap — gravity does the rest.</p>
+</footer>
+
+<script src="app.js"></script>
+</body>
+</html>
